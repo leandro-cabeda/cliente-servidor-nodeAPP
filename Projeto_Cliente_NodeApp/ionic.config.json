@@ -1,0 +1,7 @@
+{
+  "name": "Projeto_Cliente_NodeApp",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}
