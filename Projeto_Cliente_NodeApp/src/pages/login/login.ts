@@ -30,6 +30,9 @@ export class LoginPage {
 
   doLogin() {
     this.user.login(this.account).subscribe((resp) => {
+      for (let element in resp) {
+        console.log(element);
+      }
       let dados=resp;
       this.alert.create({
         title: "Login efetuado com sucesso!",

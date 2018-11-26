@@ -7,17 +7,6 @@
   </ion-navbar>
 </ion-header>
 
-<ion-menu [content]="content">
-  <ion-content>
-    <ion-list>
-      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
-        {{p.title}}
-      </button>
-    </ion-list>
-  </ion-content>
-</ion-menu>
-
-<ion-nav #content [root]="rootPage"></ion-nav>
 
 <ion-content padding>
   <h1>Adicionar Pessoa</h1>
@@ -28,7 +17,7 @@
   <ion-list *ngFor="let p of users" text-center>
     <ion-item *ngIf="flag" text-wrap>
       <label>{{p.nome}}</label>&ensp;<label>{{p.email}}</label>&ensp;
-      <button ion-button item-end icon-left round color="dark" (click)="editar(p.id)">
+      <button ion-button item-end icon-left round color="dark" (click)="editar(p)">
         <ion-icon>Editar</ion-icon>
       </button>&ensp;
       <button ion-button item-end icon-left round color="dark" (click)="excluir(p.id)">

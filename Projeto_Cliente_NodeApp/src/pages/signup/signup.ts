@@ -64,7 +64,8 @@ export class SignupPage {
     }
     else
     {
-      this.api.getId(this.p1.id).subscribe((res)=>{
+      this.api.getId(this.p1.id).subscribe((res:any)=>{
+        this.p=res;
         for(let element in res) {
           console.log(element);
         }
@@ -73,6 +74,7 @@ export class SignupPage {
       (err)=>{
         this.alert.create({
           title: "Não foi encontrado o id da pessoa, Erro!",
+          subTitle:err,
           buttons: [{
             text: "Confirmar",
             handler: () => {

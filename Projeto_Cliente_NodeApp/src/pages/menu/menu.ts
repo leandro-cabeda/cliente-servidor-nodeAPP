@@ -26,23 +26,28 @@ export class MenuPage {
   }
 
   ionViewDidLoad() {
-    this.api.get().subscribe((p:Pessoa[])=>{
-      this.users=p;
-      this.flag=true;
+    this.carregarDadosPessoas();
+  }
+
+  carregarDadosPessoas()
+  {
+    this.api.get().subscribe((p: Pessoa[]) => {
+      this.users = p;
+      this.flag = true;
     },
-    (err)=>{
-      this.alert.create({
-        title: "Erro!",
-        subTitle:err,
-        buttons: [{
-          text: "Confirmar",
-          handler: () => {
-            this.flag=false;
-          }
-        }]
-      })
-        .present();
-    });
+      (err) => {
+        this.alert.create({
+          title: "Erro!",
+          subTitle: err,
+          buttons: [{
+            text: "Confirmar",
+            handler: () => {
+              this.flag = false;
+            }
+          }]
+        })
+          .present();
+      });
   }
 
   novo()
@@ -56,7 +61,28 @@ export class MenuPage {
   }
 
   excluir(id:number) {
-    this.api.delete(id);
+    this.api.delete(id).subscribe(res=>{
+      this.alert.create({
+        title: "Deletado com sucesso!",
+        buttons: [{
+          text: "Confirmar",
+          handler: () => {
+            this.carregarDadosPessoas();
+          }
+        }]
+      })
+        .present();
+    },
+      (err) => {
+        this.alert.create({
+          title: "Erro!",
+          subTitle: err,
+          buttons: [{
+            text: "Confirmar"
+          }]
+        })
+          .present();
+      });
   }
 
 }

@@ -23,28 +23,28 @@ export class Api {
 
   get() {
 
-    return this.http.get(this.url + '/listatodos');
+    return this.http.get<Pessoa[]>(this.url + '/listatodos');
   }
 
   getId(id) {
 
-    return this.http.get(this.url + '/pegarID/',id);
+    return this.http.get<Pessoa>(this.url + '/pegarID/',id);
   }
 
   post(dados) {
-    return this.http.post(this.url + "/cadastrar/",dados);
+    return this.http.post<Pessoa>(this.url + "/cadastrar/",dados);
   }
 
   post2(dados) {
-    return this.http.post(this.url + "/entrar/", dados);
+    return this.http.post<Pessoa>(this.url + "/entrar/", dados);
   }
 
   put(dados) {
-    return this.http.put(this.url + '/atualizar',dados);
+    return this.http.put<Pessoa>(this.url + '/atualizar',dados);
   }
 
   delete(id) {
-    return this.http.delete(this.url + '/deletar/',id);
+    return this.http.delete<Pessoa>(this.url + '/deletar/',id);
   }
 
 
