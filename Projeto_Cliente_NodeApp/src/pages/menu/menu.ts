@@ -11,9 +11,9 @@ import { Api } from '../../providers/api/api';
 })
 export class MenuPage {
 
-  private user:Pessoa;
-  private users:Pessoa[];
-  private flag:any;
+  public user:Pessoa;
+  public users:Pessoa[];
+  public flag:any;
 
 
   constructor(public navCtrl: NavController, public navParams: NavParams,private api:Api,
@@ -21,6 +21,7 @@ export class MenuPage {
 
     this.user = this.navParams.get("dados");
     this.flag=false;
+    this.api.post(this.user);
 
   }
 
@@ -47,6 +48,15 @@ export class MenuPage {
   novo()
   {
     this.navCtrl.push(SignupPage);
+  }
+
+  editar(p:Pessoa) {
+    let flag=true;
+    this.navCtrl.push(SignupPage,{p,flag});
+  }
+
+  excluir(id:number) {
+    this.api.delete(id);
   }
 
 }

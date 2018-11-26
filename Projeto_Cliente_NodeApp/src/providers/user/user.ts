@@ -1,8 +1,7 @@
 import 'rxjs/add/operator/toPromise';
 
-import { Injectable } from '@angular/core';
-
 import { Api } from '../api/api';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class User {

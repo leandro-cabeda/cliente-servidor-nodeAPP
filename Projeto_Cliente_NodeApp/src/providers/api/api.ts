@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Pessoa } from '../../models/Pessoa';
 
 
 @Injectable()
@@ -25,24 +26,24 @@ export class Api {
     return this.http.get(this.url + '/listatodos');
   }
 
-  getId(id:any) {
+  getId(p:Pessoa) {
 
-    return this.http.get(this.url + '/pegarID/',id);
+    return this.http.get(this.url + '/pegarID/'+p);
   }
 
-  post(dados:any) {
+  post(dados) {
     return this.http.post(this.url + "/cadastrar/",dados);
   }
 
-  post2(dados: any) {
+  post2(dados) {
     return this.http.post(this.url + "/entrar/", dados);
   }
 
-  put(dados: any) {
+  put(dados) {
     return this.http.put(this.url + '/atualizar',dados);
   }
 
-  delete(id:any) {
+  delete(id) {
     return this.http.delete(this.url + '/deletar/',id);
   }
 
