@@ -26,9 +26,9 @@ export class Api {
     return this.http.get(this.url + '/listatodos');
   }
 
-  getId(p:Pessoa) {
+  getId(id) {
 
-    return this.http.get(this.url + '/pegarID/'+p);
+    return this.http.get(this.url + '/pegarID/',id);
   }
 
   post(dados) {

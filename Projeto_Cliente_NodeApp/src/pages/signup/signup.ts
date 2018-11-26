@@ -64,8 +64,11 @@ export class SignupPage {
     }
     else
     {
-      this.api.getId(this.p1).subscribe((res:Pessoa)=>{
-        this.p=res;
+      this.api.getId(this.p1.id).subscribe((res)=>{
+        for(let element in res) {
+          console.log(element);
+        }
+
       },
       (err)=>{
         this.alert.create({
