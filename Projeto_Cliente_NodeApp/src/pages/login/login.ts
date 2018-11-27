@@ -38,7 +38,7 @@ export class LoginPage {
         buttons: [{
           text: "Confirmar",
           handler: () => {
-            this.navCtrl.push(MenuPage, { dados });
+            this.navCtrl.push(MenuPage, { dados});
           }
         }]
       })

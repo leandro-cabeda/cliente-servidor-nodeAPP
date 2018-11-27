@@ -1,3 +1,4 @@
+import { WelcomePage } from './../welcome/welcome';
 import { SignupPage } from './../signup/signup';
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, Nav, NavController, NavParams, AlertController } from 'ionic-angular';
@@ -21,7 +22,7 @@ export class MenuPage {
 
     this.user = this.navParams.get("dados");
     this.flag=false;
-    this.api.post(this.user);
+
 
   }
 
@@ -83,6 +84,21 @@ export class MenuPage {
         })
           .present();
       });
+  }
+
+  sair()
+  {
+    this.user=null;
+    this.alert.create({
+      title: "Você saiu!",
+      buttons: [{
+        text: "Confirmar",
+        handler: () => {
+          this.navCtrl.push(WelcomePage);
+        }
+      }]
+    })
+      .present();
   }
 
 }

@@ -3,25 +3,28 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title text-center>Bem vindo {{user.nome}}</ion-title>
+    <ion-title text-wrap text-center>Bem vindo {{user.nome}}</ion-title>
   </ion-navbar>
+  <button ion-button item-end icon-left round color="danger" (click)="sair()">
+    <ion-icon ios="ios-exit" md="md-exit">Sair</ion-icon>
+  </button>
 </ion-header>
 
 
 <ion-content padding>
   <h1>Adicionar Pessoa</h1>
-  <button ion-button item-end icon-left round color="dark" (click)="novo()">
-    <ion-icon>Nova Pessoa</ion-icon>
+  <button ion-button item-end icon-left round color="primary" (click)="novo()">
+    <ion-icon ios="ios-person-add" md="md-person-add">Nova Pessoa</ion-icon>
   </button>
 </br>
   <ion-list *ngFor="let p of users" text-center>
     <ion-item *ngIf="flag" text-wrap>
       <label>{{p.nome}}</label>&ensp;<label>{{p.email}}</label>&ensp;
-      <button ion-button item-end icon-left round color="dark" (click)="editar(p)">
-        <ion-icon>Editar</ion-icon>
+      <button ion-button item-end icon-left round color="secondary" (click)="editar(p)">
+        <ion-icon ios="ios-create" md="md-create">Editar</ion-icon>
       </button>&ensp;
       <button ion-button item-end icon-left round color="dark" (click)="excluir(p.id)">
-        <ion-icon>Excluir</ion-icon>
+        <ion-icon ios="ios-trash" md="md-trash">Excluir</ion-icon>
       </button>
     </ion-item>
   </ion-list>
