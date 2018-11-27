@@ -37,8 +37,7 @@ export class MenuPage {
     },
       (err) => {
         this.alert.create({
-          title: "Erro!",
-          subTitle: err,
+          title: err,
           buttons: [{
             text: "Confirmar",
             handler: () => {
@@ -52,7 +51,8 @@ export class MenuPage {
 
   novo()
   {
-    this.navCtrl.push(SignupPage);
+    let flag = false;
+    this.navCtrl.push(SignupPage,{flag});
   }
 
   editar(p:Pessoa) {
@@ -61,7 +61,7 @@ export class MenuPage {
   }
 
   excluir(id:number) {
-    this.api.delete(id).subscribe(res=>{
+    this.api.delete(id).subscribe(()=>{
       this.alert.create({
         title: "Deletado com sucesso!",
         buttons: [{

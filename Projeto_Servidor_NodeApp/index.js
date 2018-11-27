@@ -264,7 +264,7 @@ function update(obj) {
 
 function deletar(id){
 
-    let sql = "delete from pessoas where id='"+obj.id+"'";
+    let sql = "delete from pessoas where id='"+id+"'";
     return getDB().exec(sql,
         (res) => {
             console.log("Resposta res: " + res);
@@ -280,7 +280,7 @@ function deletar(id){
 
 function getID(id) {
 
-    let sql = "select from pessoas where id='" + obj.id + "'";
+    let sql = "select from pessoas where id='" + id + "'";
     return getDB().exec(sql,
         (res) => {
             console.log("Resposta res: " + res);

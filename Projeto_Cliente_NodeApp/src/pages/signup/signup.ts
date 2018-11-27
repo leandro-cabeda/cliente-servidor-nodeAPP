@@ -15,10 +15,9 @@ import { Pessoa } from '../../models/Pessoa';
 })
 export class SignupPage {
 
-  account: { name: string, email: string, password: string };
-  p1:Pessoa;
-  flag: any = false;
+  account: { id:number,name: string, email: string, password: string };
   p:Pessoa;
+  flag: any = false;
 
   private signupErrorString: string;
 
@@ -31,13 +30,13 @@ export class SignupPage {
       this.signupErrorString = value;
     });
     this.flag = this.navParams.get("flag");
-    this.p1 = this.navParams.get("p");
+    this.p = this.navParams.get("p");
   }
 
   doSignup() {
     if (!this.flag) {
-      this.user.signup(this.account).subscribe((resp) => {
-        let dados = resp;
+      this.user.signup(this.account).subscribe((res) => {
+        let dados = res;
         this.alert.create({
           title: "Cadastro de Pessoa cadastrado com sucesso!",
           buttons: [{
@@ -64,11 +63,38 @@ export class SignupPage {
     }
     else
     {
-      this.api.getId(this.p1.id).subscribe((res:any)=>{
-        this.p=res;
-        for(let element in res) {
-          console.log(element);
-        }
+      this.api.getId(this.p.id).subscribe((res:any)=>{
+
+       this.account.name=res.nome;
+       this.account.email=res.email;
+       this.account.password=res.senha;
+       this.account.id=res.id;
+        this.api.put(this.account).subscribe(()=>{
+          this.alert.create({
+            title: "Cadastrode pessoa atualizado com sucesso!",
+            buttons: [{
+              text: "Confirmar",
+              handler: () => {
+                this.navCtrl.push(MenuPage);
+              }
+            }]
+          })
+            .present();
+
+        },
+        (err)=>{
+          this.alert.create({
+            title: "Erro ao atualizar pessoa",
+            subTitle: err,
+            buttons: [{
+              text: "Confirmar",
+              handler: () => {
+                this.navCtrl.push(MenuPage);
+              }
+            }]
+          })
+            .present();
+        });
 
       },
       (err)=>{
