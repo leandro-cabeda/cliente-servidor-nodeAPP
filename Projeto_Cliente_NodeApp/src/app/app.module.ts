@@ -3,6 +3,18 @@ import { SignupPage } from './../pages/signup/signup';
 import { MenuPage } from './../pages/menu/menu';
 import { LoginPage } from './../pages/login/login';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
+import { Http } from '@angular/http';
+
+import 'rxjs/add/operator/finally';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/fromPromise';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
+
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { Camera } from '@ionic-native/camera';
@@ -14,16 +26,13 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 
-import { User, Api } from '../providers';
+import { Api } from '../providers/api/api';
+import { User} from '../providers/user/user';
 import { MyApp } from './app.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
-
-export function provideSettings(storage: Storage) {
-
 }
 
 @NgModule({
@@ -36,6 +45,7 @@ export function provideSettings(storage: Storage) {
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     HttpClientModule,
     TranslateModule.forRoot({
       loader: {
@@ -61,7 +71,8 @@ export function provideSettings(storage: Storage) {
     Camera,
     SplashScreen,
     StatusBar,
-    { provide: '', useFactory: provideSettings, deps: [Storage] },
+    HttpModule,
+    HttpClientModule,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })

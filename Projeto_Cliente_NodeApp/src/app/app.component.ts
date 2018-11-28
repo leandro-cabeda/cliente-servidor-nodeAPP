@@ -9,12 +9,16 @@ import { WelcomePage } from '../pages/welcome/welcome';
 import { Api } from '../providers/api/api';
 
 @Component({
-  template: 'app.html'
+  templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage = WelcomePage;
+  @ViewChild(Nav) nav: Nav;
+  rootPage:any = WelcomePage;
 
-  constructor(private translate: TranslateService,private api:Api, platform: Platform, private config: Config, private statusBar: StatusBar, private splashScreen: SplashScreen) {
+  constructor(public translate: TranslateService,
+    public api:Api, platform: Platform,
+    public config: Config, public statusBar: StatusBar,
+    public splashScreen: SplashScreen) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
@@ -57,6 +61,10 @@ export class MyApp {
     this.translate.get(['BACK_BUTTON_TEXT']).subscribe(values => {
       this.config.set('ios', 'backButtonText', values.BACK_BUTTON_TEXT);
     });
+  }
+
+  openPage(page) {
+    this.nav.setRoot(page.component);
   }
 
 }

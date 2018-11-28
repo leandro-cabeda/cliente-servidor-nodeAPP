@@ -24,7 +24,7 @@ export class SignupPage {
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public user: User,
     public toastCtrl: ToastController,
-    public translateService: TranslateService, private alert: AlertController, private api: Api) {
+    public translateService: TranslateService, private alert: AlertController, public api: Api) {
 
     this.translateService.get('SIGNUP_ERROR').subscribe((value) => {
       this.signupErrorString = value;
@@ -53,7 +53,7 @@ export class SignupPage {
         this.navCtrl.push(WelcomePage);
 
         let toast = this.toastCtrl.create({
-          message: this.signupErrorString + "<br>" + err,
+          message: this.signupErrorString + " " + err,
           duration: 3000,
           position: 'top'
 

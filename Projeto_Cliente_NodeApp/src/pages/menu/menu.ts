@@ -17,7 +17,7 @@ export class MenuPage {
   public flag:any;
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,private api:Api,
+  constructor(public navCtrl: NavController, public navParams: NavParams,public api:Api,
     private alert: AlertController) {
 
     this.user = this.navParams.get("dados");

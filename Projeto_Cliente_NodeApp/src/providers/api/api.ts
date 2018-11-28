@@ -7,7 +7,7 @@ import { Pessoa } from '../../models/Pessoa';
 export class Api {
   url: string = 'https://localhost:3000/api';
 
-  constructor(public http: HttpClient, public storage: Storage) {
+  constructor(public http: HttpClient) {
   }
 
   /*load() {
