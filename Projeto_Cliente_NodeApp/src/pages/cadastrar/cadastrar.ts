@@ -49,12 +49,12 @@ export class CadastrarPage {
         })
           .present();
 
-      }, (err) => {
+      }, (err:Error) => {
 
         this.navCtrl.push(HomePage);
 
         let toast = this.toastCtrl.create({
-          message: err,
+          message: err.message,
           duration: 3000,
           position: 'top'
 
@@ -63,13 +63,17 @@ export class CadastrarPage {
       });
     }
     else {
-      this.api.getId(this.p.id).subscribe((res: any) => {
-        console.log(res);
+      this.api.getId(this.p.id).subscribe((res:any) => {
 
-        /* this.pe.nome=res.nome;
+        for(let p in res)
+        {
+          console.log("Valor de P: "+p);
+        }
+
+        this.pe.nome=res.nome;
          this.pe.email=res.email;
          this.pe.senha=res.senha;
-         this.pe.id=res.id;*/
+         this.pe.id=res.id;
         this.api.put(this.pe).subscribe(() => {
           this.alert.create({
             title: "Cadastro de pessoa atualizado com sucesso!",
@@ -83,10 +87,10 @@ export class CadastrarPage {
             .present();
 
         },
-          (err) => {
+          (err:Error) => {
             this.alert.create({
               title: "Erro ao atualizar pessoa",
-              subTitle: err,
+              subTitle: err.message,
               buttons: [{
                 text: "Confirmar",
                 handler: () => {
@@ -98,10 +102,10 @@ export class CadastrarPage {
           });
 
       },
-        (err) => {
+        (err:Error) => {
           this.alert.create({
             title: "Não foi encontrado o id da pessoa, Erro!",
-            subTitle: err,
+            subTitle: err.message,
             buttons: [{
               text: "Confirmar",
               handler: () => {

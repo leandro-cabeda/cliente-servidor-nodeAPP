@@ -37,9 +37,10 @@ export class MenuPage {
       this.users = p;
       this.flag = true;
     },
-      (err) => {
+      (err:Error) => {
         this.alert.create({
-          title: err,
+          title: "Erro carregar pessoas!",
+          subTitle: err.message,
           buttons: [{
             text: "Confirmar",
             handler: () => {
@@ -53,7 +54,7 @@ export class MenuPage {
 
   novo() {
     let flag = false;
-    this.navCtrl.push(CadastrarPage, { flag });
+    this.navCtrl.push(CadastrarPage, {flag });
   }
 
   editar(p: Pessoa) {
@@ -74,10 +75,10 @@ export class MenuPage {
       })
         .present();
     },
-      (err) => {
+      (err:Error) => {
         this.alert.create({
           title: "Erro!",
-          subTitle: err,
+          subTitle: err.message,
           buttons: [{
             text: "Confirmar"
           }]

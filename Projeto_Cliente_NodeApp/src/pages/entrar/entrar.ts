@@ -43,10 +43,10 @@ export class EntrarPage {
       })
         .present();
 
-    }, (err) => {
+    }, (err:Error) => {
       this.navCtrl.push(HomePage);
       let toast = this.toastCtrl.create({
-        message: err,
+        message: err.message,
         duration: 3000,
         position: 'top'
       });
