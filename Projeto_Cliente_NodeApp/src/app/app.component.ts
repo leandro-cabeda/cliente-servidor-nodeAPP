@@ -22,7 +22,11 @@ export class MyApp {
           console.log("Criado o banco de dados de pessoa com sucesso!!");
         },
           err => {
-            console.log("Ocorreu erro na criação do banco: " + err);
+            console.log("Ocorreu erro na criação do banco: " );
+            for(let er in err)
+            {
+              console.log(er);
+            }
           }
         );
 

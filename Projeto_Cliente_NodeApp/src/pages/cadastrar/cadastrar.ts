@@ -37,9 +37,9 @@ export class CadastrarPage {
   doSignup() {
     if (!this.flag) {
       this.user.signup(this.pe).subscribe((dados) => {
-
+        console.log("Chamou doSignup! " + dados);
         this.alert.create({
-          title: "Cadastro de Pessoa cadastrado com sucesso!",
+          title: "Pessoa cadastrado com sucesso!",
           buttons: [{
             text: "Confirmar",
             handler: () => {
@@ -54,7 +54,7 @@ export class CadastrarPage {
         this.navCtrl.push(HomePage);
 
         let toast = this.toastCtrl.create({
-          message: err.message,
+          message: "Falha ao tentar cadastrar pessoa!" + " " + err.message,
           duration: 3000,
           position: 'top'
 
@@ -63,18 +63,15 @@ export class CadastrarPage {
       });
     }
     else {
-      this.api.getId(this.p.id).subscribe((res:any) => {
-
-        for(let p in res)
-        {
-          console.log("Valor de P: "+p);
-        }
+      this.api.getId(this.p.id).subscribe((res:Pessoa) => {
+        console.log("Chamou api getid! " + res.nome);
 
         this.pe.nome=res.nome;
          this.pe.email=res.email;
          this.pe.senha=res.senha;
          this.pe.id=res.id;
         this.api.put(this.pe).subscribe(() => {
+          console.log("Chamou api put! ");
           this.alert.create({
             title: "Cadastro de pessoa atualizado com sucesso!",
             buttons: [{

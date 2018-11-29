@@ -31,7 +31,7 @@ export class EntrarPage {
 
   doLogin() {
     this.user.login(this.p).subscribe((dados) => {
-
+      console.log("Chamou doLogin! " + dados);
       this.alert.create({
         title: "Login efetuado com sucesso!",
         buttons: [{
@@ -46,7 +46,7 @@ export class EntrarPage {
     }, (err:Error) => {
       this.navCtrl.push(HomePage);
       let toast = this.toastCtrl.create({
-        message: err.message,
+        message: "Falha ao tentar logar!"+" "+err.message,
         duration: 3000,
         position: 'top'
       });

@@ -1,6 +1,6 @@
 const express = require('express');
 const router=express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 const secret = process.env.SECRET || "leocami";
 const fs = require('fs');
 const bodyParser = require("body-parser");
@@ -9,6 +9,7 @@ const sqlite = require('sqlite3').verbose();
 const jwt = require('jsonwebtoken');
 const redirectPath = "/api/entrar/:dados";
 var request = require("request");
+var db;
 
 router.use(cors());
 router.use(express.static('public'));
@@ -24,28 +25,31 @@ router.listen(port, function () {
 
 router.get('/', function (req, res, next) {
     res.status(200).send("Bem Vindo ao Diretorio Raíz!!");
-    next();
+    
 
 });
 
 router.get('/api', function (req, res, next) {
     res.status(200).send("Bem vindo a API!!!");
-    next();
+    
 });
 
 router.get('/api/banco', function (req, res, next) {
 
     let banco = getDB();
+    console.log("Retorno getGB! " + getDB());
     if(!banco)
     {
+        console.log("Deu certo o banco! "+ banco);
         res.status(200).send(banco);
     }
     else
     {
+        console.log("Deu errado o banco! "+banco);
         res.status(500).send("error");
     }
     
-    next();
+    
 });
 
 router.get('/api/listatodos', verifyToken, function (req, res,next) {
@@ -53,14 +57,16 @@ router.get('/api/listatodos', verifyToken, function (req, res,next) {
 
     if(dados!=null && dados!=undefined)
     {
+        console.log("Deu certo a busca de todos! "+dados);
         res.status(200).send(dados);
     }
     else
     {
+        console.log("Deu errado a busca de todos! "+dados);
         res.status(500).send("Lista está vazia");
     }
 
-    next();
+    
 });
 
 router.get('/api/pegarID/:id', verifyToken, function (req, res, next) {
@@ -70,13 +76,15 @@ router.get('/api/pegarID/:id', verifyToken, function (req, res, next) {
 
     if(obj!=null && obj!=undefined)
     {
+        console.log("Deu certo a busca do ID! "+id);
         res.status(200).send(obj);
     }
     else
     {
+        console.log("Deu errado a busca de ID! " +id);
         res.status(500).send("Não existe esse ID no banco de dados!");
     }
-    next();
+    
 });
 
 router.post('/api/cadastrar/:dados', verifyToken, function (req, res, next) {
@@ -85,16 +93,20 @@ router.post('/api/cadastrar/:dados', verifyToken, function (req, res, next) {
     let error=insert(obj);
     if(!error)
     {
+        console.log("Deu certo o cadastro de dados! " + obj+ "  Error: "+error);
         res.status(200).send("Cadastrado com sucesso!");
     }
     else
     {
+        console.log("Deu errado o cadastro de dados! " + obj + "  Error: " + error);
         res.status(500).send("Ocorreu falha no cadastro!");
     }
-    next();
+    
 });
 
 router.post('/api/entrar/:dados', verifyToken, function (req, res, next) {
+
+    console.log("Entrou com dados no request! " + req.body.dados);
 
     // Decodifica o valor de authorization, passado no header da requisição
     console.log("Valor da req Get:  " + req.headers.authorization);
@@ -107,6 +119,7 @@ router.post('/api/entrar/:dados', verifyToken, function (req, res, next) {
 
     // Compara os valores de usuário e senha enviados com o objeto em memória
     if (obj != null && obj != undefined) {
+        console.log("Deu certo ao obj! " + obj);
         // Se o login e senha estiverem corretos gera o token com um tempo de vida de 1 hora
         let token = jwt.sign({
             login: username,
@@ -118,6 +131,7 @@ router.post('/api/entrar/:dados', verifyToken, function (req, res, next) {
             jwt: token
         });
     } else {
+        console.log("Deu errado ao obj! " + obj);
         // Se não o login e senha não estiverem corretos seta o cabeçalho da resposta exigindo autenticação
         res.set('WWW-Authenticate', 'Basic realm="401"');
         // devolve o status de loged como falso
@@ -130,12 +144,14 @@ router.put('/api/atualizar/:dados', verifyToken, function (req, res, next) {
     let obj = req.body.dados;
     let error = update(obj);
     if (!error) {
+        console.log("Deu certo atualizar de dados! " + obj + "  Error: " + error);
         res.status(200).send("Atualizado com sucesso!");
     }
     else {
+        console.log("Deu errado atualizar de dados! " + obj + "  Error: " + error);
         res.status(500).send("Ocorreu falha no atualizar!");
     }
-    next();
+    
 });
 
 router.delete('/api/deletar/:id', verifyToken, function (req, res, next) {
@@ -143,12 +159,14 @@ router.delete('/api/deletar/:id', verifyToken, function (req, res, next) {
     let id = req.body.id;
     let error = deletar(id);
     if (!error) {
+        console.log("Deu certo deletar id! " + id + "  Error: " + error);
         res.status(200).send("Removido com sucesso!");
     }
     else {
+        console.log("Deu errado deletar id! " + id + "  Error: " + error);
         res.status(500).send("Ocorreu falha na remoção!");
     }
-    next();
+    
 });
 
 
@@ -156,6 +174,7 @@ router.post('/api/token', function (req, res,next) {
     // Recebe o token JWT pelo cabeçalho na chave autorization
     console.log("Valor da req Post:  " + req.headers.authorization);
     let token = req.headers.authorization;
+    console.log("Entrou para realizar o token! "+ token);
     // Caso o token tenha valor
     if (token) {
         // remove a string "bearer"
@@ -165,9 +184,11 @@ router.post('/api/token', function (req, res,next) {
         jwt.verify(token, secret, function (err, decoded) {
             // Em caso de erro
             if (err) {
+                console.log("Deu erro! " + err);
                 // Responde que o usuário não está logado e informa o path para onde ele deve ir para se autenticar
                 res.status(401).json({ loged: false, redirect: redirectPath });
             } else {
+                console.log("Deu certo! ");
                 // Caso não haja problemas é porque o token é válido
                 // Adiciona o valor "loged" como verdadeiro
                 decoded.loged = true;
@@ -177,6 +198,7 @@ router.post('/api/token', function (req, res,next) {
         });
         // Caso não venha nada no header autorization
     } else {
+        console.log("Deu erro no token:  " + token);
         // Exige a autenticação do usuário
         res.set('WWW-Authenticate', 'Bearer realm="401"');
         // Envia o status de loged como falso e o endereço onde ele se autentica
@@ -187,36 +209,47 @@ router.post('/api/token', function (req, res,next) {
 
 function getDB()
 {
-    let db = new sqlite.Database(':memory:',(err)=>{
+    
+    db = new sqlite.Database('banco.db',(err)=>{
         if(err)
         {
+            console.log("Ocorreu erro na conexão do banco de dados sqlite! " + err);
             return err;
+        }
+        else
+        {
+            console.log("Conectou ao banco");
         }
     });
 
-    return db.run(
-        'create table if not exists pessoas (id integer primary key autoincrement not null,' +
-        'nome text, email text, senha text)'
-    );
+    return db.serialize(function(){
+        let sql = `create table if not exists pessoas (id integer primary key autoincrement not null,
+        nome text, email text, senha text)`;
+        db.run(sql);
+    });
+    
+
 }
 
 function getAll()
 {
-    let sql ="select * from pessoas";
+    let sql =`select * from pessoas`;
     let data=[];
     
-    return getDB().get(sql,
+    return db.all(sql,
 
     (err)=>{
-        console.log("Erro: "+err);
+        console.log("Ocorreu erro no getAll! " + err);
         let message=err;
         return message;
     },
-    (row)=>{
-        if(row.length>0)
+    (rows)=>{
+        console.log("Valor rows! " + rows);
+        if(rows.length>0)
         {
-            for (let i = 0; i <row.length; i++) {
-                data.push(row.item(i));
+            console.log("Entrou no if row! " + rows);
+            for (let i = 0; i <rows.length; i++) {
+                data.push(rows.item(i));
             }
             console.log("Valores do data: "+data);
             return data;
@@ -231,8 +264,8 @@ function getAll()
 
 function insert(obj)
 {
-    let sql = "insert into pessoas (nome,email,senha) values ('" + obj.nome + "','" + obj.email + "','" + obj.senha +"')";
-    return getDB().exec(sql,     
+    let sql = `insert into pessoas (nome,email,senha) values (?,?,?)`;
+    return db.run(sql,[obj.nome,obj.email,obj.senha],     
         (res) => {
             console.log("Resposta res: " + res);
             return res;
@@ -247,8 +280,8 @@ function insert(obj)
 
 function update(obj) {
 
-    let sql = "update pessoas set nome='"+obj.nome +"', email='"+obj.email+"', senha='"+obj.senha+"' where id='"+obj.id+"'";
-    return getDB().exec(sql,
+    let sql = `update pessoas set nome=?, email=?, senha=? where id=?`;
+    return db.run(sql, [obj.nome, obj.email, obj.senha],
         (res) => {
             console.log("Resposta res: " + res);
             return res;
@@ -263,8 +296,8 @@ function update(obj) {
 
 function deletar(id){
 
-    let sql = "delete from pessoas where id='"+id+"'";
-    return getDB().exec(sql,
+    let sql = `delete from pessoas where id=?`;
+    return getDB().run(sql,[id],
         (res) => {
             console.log("Resposta res: " + res);
             return res;
@@ -279,8 +312,8 @@ function deletar(id){
 
 function getID(id) {
 
-    let sql = "select from pessoas where id='" + id + "'";
-    return getDB().exec(sql,
+    let sql = `select from pessoas where id=?`;
+    return db.run(sql,[id],
         (res) => {
             console.log("Resposta res: " + res);
             return res;
@@ -295,8 +328,8 @@ function getID(id) {
 
 function Auth(user,password) {
 
-    let sql = "select from pessoas where upper(nome)='" + user.toUpperCase() + "' and upper(senha)='" + password.toUpperCase()+"' ";
-    return getDB().exec(sql,
+    let sql = `select from pessoas where upper(nome)=? and upper(senha)=? `;
+    return db.run(sql, [user.toUpperCase(), password.toUpperCase()],
         (res) => {
             console.log("Resposta res: " + res);
             return res;
@@ -332,6 +365,7 @@ function verifyToken(req, res, next) {
             next();
         })
     } else {
+        console.log("Valor do auth: " + auth);
         next();
     }
 }
