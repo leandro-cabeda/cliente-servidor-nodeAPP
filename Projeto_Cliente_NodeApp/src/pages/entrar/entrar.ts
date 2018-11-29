@@ -13,11 +13,12 @@ import { MenuPage } from '../menu/menu';
 })
 export class EntrarPage {
 
-  p: Pessoa;
+ public p: Pessoa;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public user: UserProvider,
     public toastCtrl: ToastController, private alert: AlertController) {
+      this.p= new Pessoa();
   }
 
   ionViewDidLoad() {

@@ -13,15 +13,16 @@ import { HomePage } from '../home/home';
 })
 export class CadastrarPage {
 
-  pe: Pessoa;
-  p: Pessoa;
-  flag: any = false;
+  public pe: Pessoa;
+  public p: Pessoa;
+  public flag: any = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public user: UserProvider,
     public toastCtrl: ToastController, private alert: AlertController, public api: ApiProvider) {
     this.flag = this.navParams.get("flag");
     this.p = this.navParams.get("p");
+    this.pe = new Pessoa();
   }
 
   ionViewDidLoad() {

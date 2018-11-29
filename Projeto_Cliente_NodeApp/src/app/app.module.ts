@@ -1,4 +1,3 @@
-import { MenuPage } from './../../../Cliente_NodeApp/src/pages/menu/menu';
 import { CadastrarPage } from './../pages/cadastrar/cadastrar';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
@@ -8,11 +7,12 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { ApiProvider } from '../providers/api/api';
 import { UserProvider } from '../providers/user/user';
 import { EntrarPage } from '../pages/entrar/entrar';
+import { MenuPage } from '../pages/menu/menu';
 
 @NgModule({
   declarations: [
@@ -26,7 +26,6 @@ import { EntrarPage } from '../pages/entrar/entrar';
     BrowserModule,
     HttpModule,
     HttpClientModule,
-    HttpClient,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -40,8 +39,6 @@ import { EntrarPage } from '../pages/entrar/entrar';
   providers: [
     StatusBar,
     SplashScreen,
-    HttpModule,
-    HttpClientModule,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ApiProvider,
     UserProvider
