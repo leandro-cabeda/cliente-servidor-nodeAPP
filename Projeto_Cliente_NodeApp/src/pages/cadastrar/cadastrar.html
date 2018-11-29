@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title text-center>Cadastrar Pessoa</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <form (submit)="doSignup()" #formulario="ngForm">
+    <ion-list>
+
+      <ion-item>
+        <ion-label fixed>Nome:</ion-label>
+        <ion-input type="text" [(ngModel)]="pe.nome" name="pe.name"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label fixed>Email:</ion-label>
+        <ion-input type="email" [(ngModel)]="pe.email" name="pe.email"></ion-input>
+      </ion-item>
+
+
+      <ion-item>
+        <ion-label fixed>Senha:</ion-label>
+        <ion-input type="password" [(ngModel)]="pe.senha" name="pe.senha"></ion-input>
+      </ion-item>
+
+        <button ion-button color="primary" (click)="formulario.ngSubmit.emit()" block>Cadastrar</button>
+
+
+    </ion-list>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar color="dark">
+    <ion-title text-center>Todos os direitos Reservados.</ion-title>
+  </ion-toolbar>
+</ion-footer>

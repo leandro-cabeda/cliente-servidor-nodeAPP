@@ -1,16 +1,16 @@
-import 'rxjs/add/operator/toPromise';
-
-import { Api } from '../api/api';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ApiProvider } from '../api/api';
 
 @Injectable()
-export class User {
-  user: any;
+export class UserProvider {
 
-  constructor(public api: Api) { }
+  constructor(public api: ApiProvider) {
+
+  }
 
   login(dados: any) {
-    let seq = this.api.post2(dados).share();
+    let seq = this.api.post2(dados);
 
     seq.subscribe((res: any) => {
 
@@ -26,7 +26,7 @@ export class User {
 
 
   signup(dados: any) {
-    let seq = this.api.post(dados).share();
+    let seq = this.api.post(dados);
 
     seq.subscribe((res: any) => {
 

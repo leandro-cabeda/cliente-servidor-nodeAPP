@@ -1,37 +1,38 @@
-import { WelcomePage } from './../welcome/welcome';
-import { SignupPage } from './../signup/signup';
-import { Component, ViewChild } from '@angular/core';
-import { IonicPage, Nav, NavController, NavParams, AlertController } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Pessoa } from '../../models/Pessoa';
-import { Api } from '../../providers/api/api';
+import { ApiProvider } from '../../providers/api/api';
+import { HomePage } from '../home/home';
+import { CadastrarPage } from '../cadastrar/cadastrar';
+
 
 @IonicPage()
 @Component({
   selector: 'page-menu',
-  templateUrl: 'menu.html'
+  templateUrl: 'menu.html',
 })
 export class MenuPage {
+  public user: Pessoa;
+  public users: Pessoa[];
+  public flag: any;
 
-  public user:Pessoa;
-  public users:Pessoa[];
-  public flag:any;
-
-
-  constructor(public navCtrl: NavController, public navParams: NavParams,public api:Api,
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+    public api: ApiProvider,
     private alert: AlertController) {
 
     this.user = this.navParams.get("dados");
-    this.flag=false;
-
-
+    this.flag = false;
   }
 
   ionViewDidLoad() {
     this.carregarDadosPessoas();
   }
 
-  carregarDadosPessoas()
-  {
+  ionViewDidEnter() {
+
+  }
+
+  carregarDadosPessoas() {
     this.api.get().subscribe((p: Pessoa[]) => {
       this.users = p;
       this.flag = true;
@@ -50,19 +51,18 @@ export class MenuPage {
       });
   }
 
-  novo()
-  {
+  novo() {
     let flag = false;
-    this.navCtrl.push(SignupPage,{flag});
+    this.navCtrl.push(CadastrarPage, { flag });
   }
 
-  editar(p:Pessoa) {
-    let flag=true;
-    this.navCtrl.push(SignupPage,{p,flag});
+  editar(p: Pessoa) {
+    let flag = true;
+    this.navCtrl.push(CadastrarPage, { p, flag });
   }
 
-  excluir(id:number) {
-    this.api.delete(id).subscribe(()=>{
+  excluir(id: number) {
+    this.api.delete(id).subscribe(() => {
       this.alert.create({
         title: "Deletado com sucesso!",
         buttons: [{
@@ -86,15 +86,14 @@ export class MenuPage {
       });
   }
 
-  sair()
-  {
-    this.user=null;
+  sair() {
+    this.user = null;
     this.alert.create({
       title: "Você saiu!",
       buttons: [{
         text: "Confirmar",
         handler: () => {
-          this.navCtrl.push(WelcomePage);
+          this.navCtrl.push(HomePage);
         }
       }]
     })

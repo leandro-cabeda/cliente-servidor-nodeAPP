@@ -1,12 +1,11 @@
-import { Statement } from './C:/Users/Leandro/AppData/Local/Microsoft/TypeScript/2.6/node_modules/@types/sqlite3';
-
 const express = require('express');
-const router=express.Router();
+const router=express();
 const port = process.env.PORT || 3000;
 const secret = process.env.SECRET || "leocami";
 const fs = require('fs');
+const bodyParser = require("body-parser");
 const cors = require('cors');
-const sqlite = require("sqlite3").verbose();
+const sqlite = require('sqlite3').verbose();
 const jwt = require('jsonwebtoken');
 const redirectPath = "/api/entrar/:dados";
 var request = require("request");

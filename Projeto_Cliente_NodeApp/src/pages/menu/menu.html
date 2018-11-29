@@ -16,7 +16,7 @@
   <button ion-button item-end icon-left round color="primary" (click)="novo()">
     <ion-icon ios="ios-person-add" md="md-person-add">Nova Pessoa</ion-icon>
   </button>
-<br/>
+  <br />
   <ion-list *ngFor="let p of users" text-center>
     <ion-item *ngIf="flag" text-wrap>
       <label>{{p.nome}}</label>&ensp;<label>{{p.email}}</label>&ensp;
