@@ -14,6 +14,7 @@ import { UserProvider } from '../providers/user/user';
 import { EntrarPage } from '../pages/entrar/entrar';
 import { MenuPage } from '../pages/menu/menu';
 
+
 @NgModule({
   declarations: [
     MyApp,
