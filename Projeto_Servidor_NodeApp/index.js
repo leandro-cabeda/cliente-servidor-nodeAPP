@@ -102,8 +102,15 @@ router.post('/api/cadastrar/', function (req, res, next) {
     let obj = req.body;
     console.log("post cadastrar!");
 
+    console.log("Valor obj nome: " + obj.nome);
+    console.log("Valor obj email: " + obj.email);
+    console.log("Valor obj senha: " + obj.senha);
+  
+    let nome = obj.nome;
+    let email = obj.email;
+    let senha = obj.senha;
 
-    let error = insert(obj);
+    let error = insert(nome,email,senha);
     if (!error) {
         console.log("Deu certo o cadastro de dados! " + obj);
         res.status(200).json(obj);
@@ -246,7 +253,15 @@ function getDB() {
     db.serialize(function () {
         let sql = `create table if not exists pessoas (id integer primary key autoincrement not null,
         nome text, email text, senha text)`;
-        db.run(sql);
+        console.log("Criado tabela do banco");
+        db.run(sql, (err) => {
+            if (err) {
+                console.log("Erro: " + err.message)
+                return err;
+            }
+
+            console.log("Criado banco de dados");
+        });
     });
 
     /* db.close((err) => {
@@ -266,7 +281,7 @@ function getAll() {
     var data = [];
 
 
-    getDB().all(sql, [], (err, rows) => {
+    let all=getDB().all(sql, (err, rows) => {
         console.log("Deu getDB.all");
 
         if (err) {
@@ -274,29 +289,38 @@ function getAll() {
 
             return data;
         }
-        if(rows.length>0)
-        {
-            console.log("Valor de rows.length: "+rows.length);
-            for(let i=0;i<rows.length;i++)
-            {
-                console.log("Enrou no for de rows");
-                data.push(rows.item(i));
-            }
+        if (rows.length > 0) {
+            console.log("Valor de rows.length: " + rows.length);
+
+            rows.forEach((value,index,array)=>{
+                console.log("Entrou foreach rows");
+
+                for(let ar of array)
+                {
+                    data.push(ar);
+                }
+            
+            });
+            console.log("Valor de data: "+data);
             return data;
         }
-        else
-        {
+        else {
             console.log("Entrou no else sem nada");
-            return [];
+            return data;
         }
 
 
     });
+
+    return all;
 }
 
-function insert(obj) {
+function insert(nome,email,senha) {
     let sql = `insert into pessoas (nome,email,senha) values (?,?,?)`;
-    getDB().run(sql, [obj.nome, obj.email, obj.senha], (err) => {
+    console.log("Insert Nome: " + nome);
+    console.log("Insert Email: " + email);
+    console.log("Insert Senha: " + senha);
+    let inse=getDB().run(sql, [nome,email,senha], (err) => {
         console.log("Inseriu no banco");
 
         if (err) {
@@ -306,12 +330,14 @@ function insert(obj) {
 
     });
 
+    return inse;
+
 }
 
 function update(obj) {
 
     let sql = `update pessoas set nome=?, email=?, senha=? where id=?`;
-    getDB().run(sql, [obj.nome, obj.email, obj.senha, obj.id], (err) => {
+    let up=getDB().run(sql, [obj.nome, obj.email, obj.senha, obj.id], (err) => {
         console.log("Entrou no getDB update");
 
         if (err) {
@@ -321,12 +347,14 @@ function update(obj) {
         }
 
     });
+
+    return up;
 }
 
 function deletar(id) {
 
     let sql = `delete from pessoas where id=?`;
-    getDB().run(sql, [id], (err) => {
+   let del= getDB().run(sql, [id], (err) => {
         console.log("Deu getDB deletar");
 
         if (err) {
@@ -335,13 +363,15 @@ function deletar(id) {
         }
 
     });
+
+    return del;
 }
 
 function getID(id) {
 
     let sql = `select from pessoas where id=?`;
     var data;
-    getDB().get(sql, [id], (err, rows) => {
+    let id=getDB().get(sql, [id], (err, row) => {
         console.log("Deu getDB.getID");
 
         if (err) {
@@ -350,23 +380,22 @@ function getID(id) {
             return data;
         }
 
-        if (rows.length > 0) {
-            console.log("Valor de rows.length: " + rows.length);
-            for (let i = 0; i < rows.length; i++) {
-                console.log("Entrou no for rows ");
-                data=rows.item(i);
-            }
+        if (row) {
+            
+            console.log("Valor do row: "+row);
+            data = row;
 
             return data;
         }
-        else
-        {
+        else {
             console.log("Entrou no else sem nada");
-            return;
+            return data;
         }
-        
+
 
     });
+
+    return id;
 }
 
 /*function Auth(user, password) {

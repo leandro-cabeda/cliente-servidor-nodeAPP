@@ -88,7 +88,7 @@ export class MenuPage {
   }
 
   sair() {
-    this.user = null;
+
     this.alert.create({
       title: "Você saiu!",
       buttons: [{
