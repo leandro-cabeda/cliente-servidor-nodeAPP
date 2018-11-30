@@ -49,32 +49,32 @@ router.get('/api', function (req, res, next) {
 router.get('/api/banco', function (req, res, next) {
 
     let banco = getDB();
-    console.log("Valor banco: " +banco);
-    res.status(200).send(banco);
-    //console.log("Valor banco: " + banco);
-   /* if (banco) {
+    console.log("Valor banco: " + banco);
+
+    if (banco) {
         console.log("Deu certo o banco! " + banco);
-        res.status(200).send(banco);
+        res.status(200).json(banco);
     }
     else {
         console.log("Deu errado o banco! " + banco);
-        res.status(500).send("error");
-    }*/
+        res.status(500).json("error");
+    }
 
 
 });
 
 router.get('/api/listatodos', function (req, res, next) {
     let dados = getAll();
-    console.log("Valor dados: "+dados);
+    console.log("Valor dados: " + dados);
+    console.log("get lista todos!");
 
     if (dados != null && dados != undefined) {
         console.log("Deu certo a busca de todos! " + dados);
-        res.status(200).send(dados);
+        res.status(200).json(dados);
     }
     else {
         console.log("Deu errado a busca de todos! " + dados);
-        res.status(500).send("Lista está vazia");
+        res.status(500).json("Lista está vazia");
     }
 
 
@@ -82,16 +82,17 @@ router.get('/api/listatodos', function (req, res, next) {
 
 router.get('/api/pegarID/:id', function (req, res, next) {
 
-    let id = req.body.id;
+    let id = req.params.id;
     let obj = getID(id);
+    console.log("get id!");
 
     if (obj != null && obj != undefined) {
         console.log("Deu certo a busca do ID! " + id);
-        res.status(200).send(obj);
+        res.status(200).json(obj);
     }
     else {
         console.log("Deu errado a busca de ID! " + id);
-        res.status(500).send("Não existe esse ID no banco de dados!");
+        res.status(500).json("Não existe esse ID no banco de dados!");
     }
 
 });
@@ -99,15 +100,17 @@ router.get('/api/pegarID/:id', function (req, res, next) {
 router.post('/api/cadastrar/', function (req, res, next) {
 
     let obj = req.body;
-    console.log("Valor obj " + obj);
+    console.log("post cadastrar!");
+
+
     let error = insert(obj);
     if (!error) {
-        console.log("Deu certo o cadastro de dados! " + obj + "  Error: " + error);
-        res.status(200).send("Cadastrado com sucesso!");
+        console.log("Deu certo o cadastro de dados! " + obj);
+        res.status(200).json(obj);
     }
     else {
         console.log("Deu errado o cadastro de dados! " + obj + "  Error: " + error);
-        res.status(500).send("Ocorreu falha no cadastro!");
+        res.status(500).json("Ocorreu falha no cadastro!");
     }
 
 });
@@ -115,6 +118,7 @@ router.post('/api/cadastrar/', function (req, res, next) {
 router.post('/api/entrar/', function (req, res, next) {
 
     let obj = req.body;
+    console.log("post entrar!");
     console.log("Valor obj " + obj);
     console.log("Entrou com dados no request! " + req.body);
 
@@ -152,31 +156,33 @@ router.post('/api/entrar/', function (req, res, next) {
 router.put('/api/atualizar/', function (req, res, next) {
 
     let obj = req.body;
+    console.log("put atualizar!");
     console.log("Valor obj " + obj);
     let error = update(obj);
     if (!error) {
-        console.log("Deu certo atualizar de dados! " + obj + "  Error: " + error);
-        res.status(200).send("Atualizado com sucesso!");
+        console.log("Deu certo atualizar de dados! " + obj);
+        res.status(200).json("Atualizado com sucesso!");
     }
     else {
         console.log("Deu errado atualizar de dados! " + obj + "  Error: " + error);
-        res.status(500).send("Ocorreu falha no atualizar!");
+        res.status(500).json("Ocorreu falha no atualizar!");
     }
 
 });
 
 router.delete('/api/deletar/:id', function (req, res, next) {
 
-    let id = req.body.id;
+    let id = req.params.id;
+    console.log("delete id!");
     console.log("Valor id " + id);
     let error = deletar(id);
     if (!error) {
-        console.log("Deu certo deletar id! " + id + "  Error: " + error);
-        res.status(200).send("Removido com sucesso!");
+        console.log("Deu certo deletar id! " + id);
+        res.status(200).json("Removido com sucesso!");
     }
     else {
         console.log("Deu errado deletar id! " + id + "  Error: " + error);
-        res.status(500).send("Ocorreu falha na remoção!");
+        res.status(500).json("Ocorreu falha na remoção!");
     }
 
 });
@@ -220,7 +226,7 @@ router.delete('/api/deletar/:id', function (req, res, next) {
 
 
 function getDB() {
-    
+
     console.log("Função getDB");
     /*let sql = "create table if not exists pessoas (id serial primary key not null," +
         "nome text, email text, senha text)";
@@ -229,7 +235,7 @@ function getDB() {
         console.log("Erro: " + err + "   Res: " + res);
     });*/
 
-    let db = new sqlite.Database(':memory:', (err) => {
+    let db = new sqlite.Database('CadastroPessoas', (err) => {
         if (err) {
             return console.error("Ocorreu erro no banco: " + err.message);
         }
@@ -243,12 +249,12 @@ function getDB() {
         db.run(sql);
     });
 
-    db.close((err) => {
-        if (err) {
-            console.error("Erro: "+err.message);
-        }
-        console.log('Close the database connection.');
-    });
+    /* db.close((err) => {
+         if (err) {
+             console.error("Erro: "+err.message);
+         }
+         console.log('Close the database connection.');
+     });*/
 
     return db;
 
@@ -257,96 +263,110 @@ function getDB() {
 
 function getAll() {
     let sql = `select * from pessoas`;
-    let data = [];
+    var data = [];
 
 
-    getDB().all(sql,
+    getDB().all(sql, [], (err, rows) => {
+        console.log("Deu getDB.all");
 
-        (rows) => {
-            console.log("Valor rows! " + rows.length);
-            if (rows.length > 0) {
-                console.log("Entrou no if row! " + rows);
-                for (let i = 0; i < rows.length; i++) {
-                    data.push(rows.item(i));
-                }
-                console.log("Valores do data: " + data);
-                return data;
-            }
-            else {
-                console.log("Lista está vazia");
-                return data;
-            }
-        },
+        if (err) {
+            console.log("Deu erro no getl all");
 
-        (err) => {
-            console.log("Erro: " + err.message);
-            let erro = err.message;
-            return erro;
+            return data;
         }
-    );
+        if(rows.length>0)
+        {
+            console.log("Valor de rows.length: "+rows.length);
+            for(let i=0;i<rows.length;i++)
+            {
+                console.log("Enrou no for de rows");
+                data.push(rows.item(i));
+            }
+            return data;
+        }
+        else
+        {
+            console.log("Entrou no else sem nada");
+            return [];
+        }
+
+
+    });
 }
 
 function insert(obj) {
     let sql = `insert into pessoas (nome,email,senha) values (?,?,?)`;
-    getDB().run(sql, [obj.nome, obj.email, obj.senha],
-        (res) => {
-            console.log("Resposta res: " + res);
-            return res;
-        },
-        (err) => {
-            console.log("Erro: " + err.message);
-            let message = err.message;
-            return message;
+    getDB().run(sql, [obj.nome, obj.email, obj.senha], (err) => {
+        console.log("Inseriu no banco");
 
-        });
+        if (err) {
+            console.log("Erro: " + err.message);
+            return err;
+        }
+
+    });
+
 }
 
 function update(obj) {
 
     let sql = `update pessoas set nome=?, email=?, senha=? where id=?`;
-    getDB().run(sql, [obj.nome, obj.email, obj.senha],
-        (res) => {
-            console.log("Resposta res: " + res);
-            return res;
-        },
-        (err) => {
-            console.log("Erro: " + err.message);
-            let message = err.message;
-            return message;
+    getDB().run(sql, [obj.nome, obj.email, obj.senha, obj.id], (err) => {
+        console.log("Entrou no getDB update");
 
-        });
+        if (err) {
+            console.log("Erro: " + err.message);
+
+            return err;
+        }
+
+    });
 }
 
 function deletar(id) {
 
     let sql = `delete from pessoas where id=?`;
-    getDB().run(sql, [id],
-        (res) => {
-            console.log("Resposta res: " + res);
-            return res;
-        },
-        (err) => {
-            console.log("Erro: " + err.message);
-            let message = err.message;
-            return message;
+    getDB().run(sql, [id], (err) => {
+        console.log("Deu getDB deletar");
 
-        });
+        if (err) {
+            console.log("Erro: " + err.message);
+            return err;
+        }
+
+    });
 }
 
 function getID(id) {
 
     let sql = `select from pessoas where id=?`;
-    getDB().run(sql, [id],
-        (res) => {
-            console.log("Resposta res: " + res);
-            return res;
-        },
-        (err) => {
-            console.log("Erro: " + err.message);
-            let message = err.message;
-            return message;
+    var data;
+    getDB().get(sql, [id], (err, rows) => {
+        console.log("Deu getDB.getID");
 
-        });
+        if (err) {
+            console.log("Deu erro no get id");
+
+            return data;
+        }
+
+        if (rows.length > 0) {
+            console.log("Valor de rows.length: " + rows.length);
+            for (let i = 0; i < rows.length; i++) {
+                console.log("Entrou no for rows ");
+                data=rows.item(i);
+            }
+
+            return data;
+        }
+        else
+        {
+            console.log("Entrou no else sem nada");
+            return;
+        }
+        
+
+    });
 }
 
 /*function Auth(user, password) {

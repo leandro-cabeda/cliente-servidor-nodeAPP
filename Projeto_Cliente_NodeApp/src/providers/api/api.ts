@@ -29,12 +29,12 @@ export class ApiProvider {
 
   public post(dados:Pessoa) {
     console.log("Chamou post! "+dados);
-    return this.http.post(this.url + "/cadastrar/",dados);
+    return this.http.post<Pessoa>(this.url + "/cadastrar/",dados);
   }
 
   public post2(dados:Pessoa) {
     console.log("Chamou post2! "+dados);
-    return this.http.post(this.url + "/entrar/", dados);
+    return this.http.post<Pessoa>(this.url + "/entrar/", dados);
   }
 
   public put(dados:Pessoa) {
