@@ -5,7 +5,7 @@ import { Pessoa } from '../../models/Pessoa';
 @Injectable()
 export class ApiProvider {
 
-  public url: string = 'https://localhost:8080/api';
+  public url: string = 'http://localhost:8080/api';
 
   constructor(public http: HttpClient) {
 
@@ -29,12 +29,12 @@ export class ApiProvider {
 
   public post(dados:Pessoa) {
     console.log("Chamou post! "+dados);
-    return this.http.post<Pessoa>(this.url + "/cadastrar/", dados);
+    return this.http.post(this.url + "/cadastrar/",dados);
   }
 
   public post2(dados:Pessoa) {
     console.log("Chamou post2! "+dados);
-    return this.http.post<Pessoa>(this.url + "/entrar/", dados);
+    return this.http.post(this.url + "/entrar/", dados);
   }
 
   public put(dados:Pessoa) {
@@ -44,7 +44,7 @@ export class ApiProvider {
 
   public delete(id:number) {
     console.log("Chamou delete! "+id);
-    return this.http.delete<Pessoa>(this.url + '/deletar/'+id);
+    return this.http.delete(this.url + '/deletar/'+id);
   }
 
 

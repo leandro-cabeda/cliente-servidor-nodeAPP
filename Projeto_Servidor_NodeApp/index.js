@@ -9,6 +9,19 @@ const sqlite = require('sqlite3').verbose();
 const jwt = require('jsonwebtoken');
 const redirectPath = "/api/entrar/:dados";
 var request = require("request");
+/*const { Pool, Client } = require("pg");
+const db= new Client({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'CadastroPessoas',
+    password: '963852741',
+    port: 5432,
+});
+console.log(db);
+db.connect();
+console.log("Retorno getGB: " + getDB());*/
+
+
 
 router.use(cors());
 router.use(express.static('public'));
@@ -23,35 +36,37 @@ router.listen(port, function () {
 });
 
 router.get('/', function (req, res, next) {
-    res.status(200).send("Bem Vindo ao Diretorio Raíz!!");
+    res.status(200).json("Bem Vindo ao Diretorio Raíz!!");
 
 
 });
 
 router.get('/api', function (req, res, next) {
-    res.status(200).send("Bem vindo a API!!!");
+    res.status(200).json("Bem vindo a API!!!");
 
 });
 
 router.get('/api/banco', function (req, res, next) {
 
     let banco = getDB();
-    console.log("Retorno getGB: " + getDB());
-    console.log("Valor banco: " + banco);
-    if (banco) {
+    console.log("Valor banco: " +banco);
+    res.status(200).send(banco);
+    //console.log("Valor banco: " + banco);
+   /* if (banco) {
         console.log("Deu certo o banco! " + banco);
         res.status(200).send(banco);
     }
     else {
         console.log("Deu errado o banco! " + banco);
         res.status(500).send("error");
-    }
+    }*/
 
 
 });
 
-router.get('/api/listatodos', verifyToken, function (req, res, next) {
+router.get('/api/listatodos', function (req, res, next) {
     let dados = getAll();
+    console.log("Valor dados: "+dados);
 
     if (dados != null && dados != undefined) {
         console.log("Deu certo a busca de todos! " + dados);
@@ -65,7 +80,7 @@ router.get('/api/listatodos', verifyToken, function (req, res, next) {
 
 });
 
-router.get('/api/pegarID/:id', verifyToken, function (req, res, next) {
+router.get('/api/pegarID/:id', function (req, res, next) {
 
     let id = req.body.id;
     let obj = getID(id);
@@ -81,9 +96,10 @@ router.get('/api/pegarID/:id', verifyToken, function (req, res, next) {
 
 });
 
-router.post('/api/cadastrar/:dados', verifyToken, function (req, res, next) {
+router.post('/api/cadastrar/', function (req, res, next) {
 
-    let obj = req.body.dados;
+    let obj = req.body;
+    console.log("Valor obj " + obj);
     let error = insert(obj);
     if (!error) {
         console.log("Deu certo o cadastro de dados! " + obj + "  Error: " + error);
@@ -96,13 +112,15 @@ router.post('/api/cadastrar/:dados', verifyToken, function (req, res, next) {
 
 });
 
-router.post('/api/entrar/:dados', verifyToken, function (req, res, next) {
+router.post('/api/entrar/', function (req, res, next) {
 
-    console.log("Entrou com dados no request! " + req.body.dados);
+    let obj = req.body;
+    console.log("Valor obj " + obj);
+    console.log("Entrou com dados no request! " + req.body);
 
     // Decodifica o valor de authorization, passado no header da requisição
     console.log("Valor da req Get:  " + req.headers.authorization);
-    let [username, password] = decodAuth(req.headers.authorization);
+    /*let [username, password] = decodAuth(req.headers.authorization);
 
     let obj = Auth(username, password);
 
@@ -128,12 +146,13 @@ router.post('/api/entrar/:dados', verifyToken, function (req, res, next) {
         res.set('WWW-Authenticate', 'Basic realm="401"');
         // devolve o status de loged como falso
         res.status(401).json({ loged: false, redirect: redirectPath });
-    }
+    }*/
 });
 
-router.put('/api/atualizar/:dados', verifyToken, function (req, res, next) {
+router.put('/api/atualizar/', function (req, res, next) {
 
-    let obj = req.body.dados;
+    let obj = req.body;
+    console.log("Valor obj " + obj);
     let error = update(obj);
     if (!error) {
         console.log("Deu certo atualizar de dados! " + obj + "  Error: " + error);
@@ -146,9 +165,10 @@ router.put('/api/atualizar/:dados', verifyToken, function (req, res, next) {
 
 });
 
-router.delete('/api/deletar/:id', verifyToken, function (req, res, next) {
+router.delete('/api/deletar/:id', function (req, res, next) {
 
     let id = req.body.id;
+    console.log("Valor id " + id);
     let error = deletar(id);
     if (!error) {
         console.log("Deu certo deletar id! " + id + "  Error: " + error);
@@ -162,7 +182,7 @@ router.delete('/api/deletar/:id', verifyToken, function (req, res, next) {
 });
 
 
-router.post('/api/token', function (req, res, next) {
+/*router.post('/api/token', function (req, res, next) {
     // Recebe o token JWT pelo cabeçalho na chave autorization
     console.log("Valor da req Post:  " + req.headers.authorization);
     let token = req.headers.authorization;
@@ -196,12 +216,19 @@ router.post('/api/token', function (req, res, next) {
         // Envia o status de loged como falso e o endereço onde ele se autentica
         res.status(401).json({ loged: false, redirect: redirectPath });
     }
-});
+});*/
 
 
 function getDB() {
     
     console.log("Função getDB");
+    /*let sql = "create table if not exists pessoas (id serial primary key not null," +
+        "nome text, email text, senha text)";
+
+    db.query(sql, (err, res) => {
+        console.log("Erro: " + err + "   Res: " + res);
+    });*/
+
     let db = new sqlite.Database(':memory:', (err) => {
         if (err) {
             return console.error("Ocorreu erro no banco: " + err.message);
@@ -322,7 +349,7 @@ function getID(id) {
         });
 }
 
-function Auth(user, password) {
+/*function Auth(user, password) {
 
     let sql = `select from pessoas where upper(nome)=? and upper(senha)=? `;
     getDB().run(sql, [user.toUpperCase(), password.toUpperCase()],
@@ -336,9 +363,9 @@ function Auth(user, password) {
             return message;
 
         });
-}
+}*/
 
-function verifyToken(req, res, next) {
+/*function verifyToken(req, res, next) {
     console.log("Valor da função verifyToken da req autorização:  " + req.headers.authorization);
     let auth = req.headers.authorization;
     if (auth) {
@@ -370,4 +397,4 @@ function decodAuth(authorization) {
     if (authorization === undefined) return [undefined, undefined]
     console.log("Valor que veio da autorização:  " + authorization);
     return new Buffer(authorization.split(' ')[1], 'base64').toString().split(':');
-}
+}*/

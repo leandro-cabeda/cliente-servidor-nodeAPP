@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiProvider } from '../api/api';
+import { Pessoa } from '../../models/Pessoa';
 
 @Injectable()
 export class UserProvider {
@@ -9,14 +10,14 @@ export class UserProvider {
 
   }
 
-  login(dados: any) {
+  login(dados: Pessoa) {
     let seq = this.api.post2(dados);
     console.log("Chamou login! " + dados);
 
-    seq.subscribe((res: any) => {
+    seq.subscribe((res: Pessoa) => {
       console.log("Deu certo seq: " + res);
 
-      if (res.status == 200) {
+      if (res!=null) {
         console.log("Deu certo!");
       }
     }, err => {
@@ -27,12 +28,12 @@ export class UserProvider {
   }
 
 
-  signup(dados: any) {
+  signup(dados: Pessoa) {
     let seq = this.api.post(dados);
     console.log("Chamou signup! "+dados);
-    seq.subscribe((res: any) => {
+    seq.subscribe((res: Pessoa) => {
       console.log("Deu certo seq: " + res);
-      if (res.status == 200) {
+      if (res!=null) {
         console.log("Deu certo!");
       }
     }, err => {

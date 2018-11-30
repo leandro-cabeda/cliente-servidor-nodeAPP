@@ -10,6 +10,7 @@
     "file-system": "^2.2.2",
     "fs": "0.0.1-security",
     "jsonwebtoken": "^8.4.0",
+    "pg": "^7.7.1",
     "request": "^2.88.0",
     "sqlite3": "^4.0.4",
     "supervisor": "^0.12.0"

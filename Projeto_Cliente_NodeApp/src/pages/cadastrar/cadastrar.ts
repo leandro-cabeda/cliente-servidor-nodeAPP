@@ -36,7 +36,7 @@ export class CadastrarPage {
 
   doSignup() {
     if (!this.flag) {
-      this.user.signup(this.pe).subscribe((dados) => {
+      this.user.signup(this.pe).subscribe((dados:Pessoa) => {
         console.log("Chamou doSignup! " + dados);
         this.alert.create({
           title: "Pessoa cadastrado com sucesso!",

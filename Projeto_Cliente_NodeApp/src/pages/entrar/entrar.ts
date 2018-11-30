@@ -30,7 +30,7 @@ export class EntrarPage {
   }
 
   doLogin() {
-    this.user.login(this.p).subscribe((dados) => {
+    this.user.login(this.p).subscribe((dados:Pessoa) => {
       console.log("Chamou doLogin! " + dados);
       this.alert.create({
         title: "Login efetuado com sucesso!",
