@@ -5,6 +5,7 @@ import { IonicPage, NavController, NavParams, ToastController, AlertController }
 import { Pessoa } from '../../models/Pessoa';
 import { MenuPage } from '../menu/menu';
 import { HomePage } from '../home/home';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @IonicPage()
 @Component({
@@ -36,7 +37,7 @@ export class CadastrarPage {
 
   doSignup() {
     if (!this.flag) {
-      this.user.signup(this.pe).subscribe((dados:Pessoa) => {
+      this.user.signup(this.pe).subscribe(dados => {
         console.log("Chamou doSignup! " + dados);
         this.alert.create({
           title: "Pessoa cadastrado com sucesso!",
@@ -49,7 +50,7 @@ export class CadastrarPage {
         })
           .present();
 
-      }, (err:Error) => {
+      }, (err: HttpErrorResponse) => {
 
         this.navCtrl.push(HomePage);
 
@@ -63,7 +64,7 @@ export class CadastrarPage {
       });
     }
     else {
-      this.api.getId(this.p.id).subscribe((res:Pessoa) => {
+      this.api.getId(this.p.id).subscribe(res => {
         console.log("Chamou api getid! " + res.nome);
 
         this.pe.nome=res.nome;
@@ -84,7 +85,7 @@ export class CadastrarPage {
             .present();
 
         },
-          (err:Error) => {
+          (err: HttpErrorResponse) => {
             this.alert.create({
               title: "Erro ao atualizar pessoa",
               subTitle: err.message,
@@ -99,7 +100,7 @@ export class CadastrarPage {
           });
 
       },
-        (err:Error) => {
+        (err: HttpErrorResponse) => {
           this.alert.create({
             title: "Não foi encontrado o id da pessoa, Erro!",
             subTitle: err.message,

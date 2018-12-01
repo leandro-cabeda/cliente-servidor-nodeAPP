@@ -4,6 +4,7 @@ import { IonicPage, NavController, NavParams, ToastController, AlertController }
 import { Pessoa } from '../../models/Pessoa';
 import { HomePage } from '../home/home';
 import { MenuPage } from '../menu/menu';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @IonicPage()
@@ -30,7 +31,7 @@ export class EntrarPage {
   }
 
   doLogin() {
-    this.user.login(this.p).subscribe((dados:Pessoa) => {
+    this.user.login(this.p).subscribe(dados => {
       console.log("Chamou doLogin! " + dados);
       this.alert.create({
         title: "Login efetuado com sucesso!",
@@ -43,7 +44,7 @@ export class EntrarPage {
       })
         .present();
 
-    }, (err:Error) => {
+    }, (err: HttpErrorResponse) => {
       this.navCtrl.push(HomePage);
       let toast = this.toastCtrl.create({
         message: "Falha ao tentar logar!"+" "+err.message,

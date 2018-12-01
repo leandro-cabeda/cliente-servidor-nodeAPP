@@ -14,7 +14,7 @@ export class UserProvider {
     let seq = this.api.post2(dados);
     console.log("Chamou login! " + dados);
 
-    seq.subscribe((res: Pessoa) => {
+    seq.subscribe(res => {
       console.log("Deu certo seq: " + res);
 
       if (res!=null) {
@@ -31,7 +31,7 @@ export class UserProvider {
   signup(dados: Pessoa) {
     let seq = this.api.post(dados);
     console.log("Chamou signup! "+dados);
-    seq.subscribe((res: Pessoa) => {
+    seq.subscribe(res => {
       console.log("Deu certo seq: " + res);
       if (res!=null) {
         console.log("Deu certo!");

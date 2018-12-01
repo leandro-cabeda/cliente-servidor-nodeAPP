@@ -4,6 +4,7 @@ import { Pessoa } from '../../models/Pessoa';
 import { ApiProvider } from '../../providers/api/api';
 import { HomePage } from '../home/home';
 import { CadastrarPage } from '../cadastrar/cadastrar';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @IonicPage()
@@ -21,7 +22,7 @@ export class MenuPage {
     private alert: AlertController) {
 
     this.user = this.navParams.get("dados");
-    this.flag = false;
+    this.flag=false;
   }
 
   ionViewDidLoad() {
@@ -29,15 +30,20 @@ export class MenuPage {
   }
 
   ionViewDidEnter() {
-
+    //this.carregarDadosPessoas();
   }
 
   carregarDadosPessoas() {
-    this.api.get().subscribe((p: Pessoa[]) => {
+    this.api.get().subscribe(p => {
+
+      for(let i=0; i<p.length;i++)
+      {
+        console.warn("Valor pe: "+p[i].nome);
+      }
       this.users = p;
       this.flag = true;
     },
-      (err:Error) => {
+      (err: HttpErrorResponse) => {
         this.alert.create({
           title: "Erro carregar pessoas!",
           subTitle: err.message,
@@ -75,7 +81,7 @@ export class MenuPage {
       })
         .present();
     },
-      (err:Error) => {
+      (err: HttpErrorResponse) => {
         this.alert.create({
           title: "Erro!",
           subTitle: err.message,

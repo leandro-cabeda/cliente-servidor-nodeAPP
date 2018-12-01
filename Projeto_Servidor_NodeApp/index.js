@@ -65,7 +65,7 @@ router.get('/api/banco', function (req, res, next) {
 
 router.get('/api/listatodos', function (req, res, next) {
     let dados = getAll();
-    console.log("Valor dados: " + dados);
+    console.log("Valor dados lista todos: " + dados);
     console.log("get lista todos!");
 
     if (dados != null && dados != undefined) {
@@ -281,38 +281,48 @@ function getAll() {
     var data = [];
 
 
-    let all=getDB().all(sql, (err, rows) => {
+   return getDB().all(sql,[], (err, rows) => {
         console.log("Deu getDB.all");
 
         if (err) {
             console.log("Deu erro no getl all");
 
-            return data;
+            return err;
         }
         if (rows.length > 0) {
             console.log("Valor de rows.length: " + rows.length);
 
-            rows.forEach((value,index,array)=>{
-                console.log("Entrou foreach rows");
-
-                for(let ar of array)
-                {
-                    data.push(ar);
-                }
+            for(let i=0;i<rows.length;i++){
+                console.log("Valor row: "+rows[i].nome);
+                let reg={
+                    id:rows[i].id,
+                    nome: rows[i].nome,
+                    email: rows[i].email,
+                    senha: rows[i].senha,
+                };
+                console.log("Valor reg: "+reg);
+                data.push(reg);
             
-            });
-            console.log("Valor de data: "+data);
+            }
+            console.log("Valor de data.nome: "+data[0].nome);
+            
+        }
+        else {
+            console.log("Entrou no else sem nada, valor data: "+data);
+            
+        }
+
+        if (data != null && data != undefined) {
+            console.log("Valor data dentro do if get all: " + data);
             return data;
         }
         else {
-            console.log("Entrou no else sem nada");
+            console.log("Valor data dentro do else get all: " + data);
             return data;
         }
 
-
     });
-
-    return all;
+    
 }
 
 function insert(nome,email,senha) {
@@ -320,7 +330,7 @@ function insert(nome,email,senha) {
     console.log("Insert Nome: " + nome);
     console.log("Insert Email: " + email);
     console.log("Insert Senha: " + senha);
-    let inse=getDB().run(sql, [nome,email,senha], (err) => {
+    getDB().run(sql, [nome,email,senha], (err) => {
         console.log("Inseriu no banco");
 
         if (err) {
@@ -330,14 +340,13 @@ function insert(nome,email,senha) {
 
     });
 
-    return inse;
 
 }
 
 function update(obj) {
 
     let sql = `update pessoas set nome=?, email=?, senha=? where id=?`;
-    let up=getDB().run(sql, [obj.nome, obj.email, obj.senha, obj.id], (err) => {
+  getDB().run(sql, [obj.nome, obj.email, obj.senha, obj.id], (err) => {
         console.log("Entrou no getDB update");
 
         if (err) {
@@ -348,13 +357,13 @@ function update(obj) {
 
     });
 
-    return up;
+    
 }
 
 function deletar(id) {
 
     let sql = `delete from pessoas where id=?`;
-   let del= getDB().run(sql, [id], (err) => {
+   getDB().run(sql, [id], (err) => {
         console.log("Deu getDB deletar");
 
         if (err) {
@@ -364,14 +373,13 @@ function deletar(id) {
 
     });
 
-    return del;
 }
 
 function getID(id) {
 
     let sql = `select from pessoas where id=?`;
     var data;
-    let id=getDB().get(sql, [id], (err, row) => {
+   return getDB().get(sql, [id], (err, row) => {
         console.log("Deu getDB.getID");
 
         if (err) {
@@ -382,20 +390,18 @@ function getID(id) {
 
         if (row) {
             
-            console.log("Valor do row: "+row);
+            console.log("Valor do row.nome: "+row.nome);
             data = row;
 
             return data;
         }
         else {
-            console.log("Entrou no else sem nada");
+            console.log("Entrou no else sem nada, valor data: "+data);
             return data;
         }
 
 
     });
-
-    return id;
 }
 
 /*function Auth(user, password) {
