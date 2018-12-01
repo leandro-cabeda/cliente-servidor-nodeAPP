@@ -36,10 +36,6 @@ export class MenuPage {
   carregarDadosPessoas() {
     this.api.get().subscribe(p => {
 
-      for(let i=0; i<p.length;i++)
-      {
-        console.warn("Valor pe: "+p[i].nome);
-      }
       this.users = p;
       this.flag = true;
     },
@@ -59,13 +55,13 @@ export class MenuPage {
   }
 
   novo() {
-    let flag = false;
-    this.navCtrl.push(CadastrarPage, {flag });
+
+    this.navCtrl.push(CadastrarPage);
   }
 
   editar(p: Pessoa) {
-    let flag = true;
-    this.navCtrl.push(CadastrarPage, { p, flag });
+    let flag2 = true;
+    this.navCtrl.push(CadastrarPage, { p, flag2 });
   }
 
   excluir(id: number) {

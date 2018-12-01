@@ -10,7 +10,6 @@ import { HomePage } from '../pages/home/home';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { ApiProvider } from '../providers/api/api';
-import { UserProvider } from '../providers/user/user';
 import { EntrarPage } from '../pages/entrar/entrar';
 import { MenuPage } from '../pages/menu/menu';
 
@@ -41,8 +40,7 @@ import { MenuPage } from '../pages/menu/menu';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ApiProvider,
-    UserProvider
+    ApiProvider
   ]
 })
 export class AppModule {}

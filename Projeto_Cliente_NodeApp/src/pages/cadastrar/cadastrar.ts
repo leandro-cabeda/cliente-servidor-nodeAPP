@@ -1,5 +1,4 @@
 import { ApiProvider } from './../../providers/api/api';
-import { UserProvider } from './../../providers/user/user';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 import { Pessoa } from '../../models/Pessoa';
@@ -16,14 +15,27 @@ export class CadastrarPage {
 
   public pe: Pessoa;
   public p: Pessoa;
-  public flag: any = false;
+  public flag: any;
+  public flag2:any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    public user: UserProvider,
     public toastCtrl: ToastController, private alert: AlertController, public api: ApiProvider) {
-    this.flag = this.navParams.get("flag");
-    this.p = this.navParams.get("p");
     this.pe = new Pessoa();
+    this.flag = false;
+    console.log("Valor flag inicial: "+this.flag);
+
+    this.flag2 = this.navParams.get("flag2");
+    console.log("Valor flag2 quando editar: " + this.flag2);
+
+    if(this.flag2){
+      this.p = this.navParams.get("p");
+      this.pe.id=this.p.id;
+      this.pe.nome = this.p.nome;
+      this.pe.email = this.p.email;
+      this.pe.senha = this.p.senha;
+    }
+
+
   }
 
   ionViewDidLoad() {
@@ -37,7 +49,7 @@ export class CadastrarPage {
 
   doSignup() {
     if (!this.flag) {
-      this.user.signup(this.pe).subscribe(dados => {
+      this.api.post(this.pe).subscribe(dados => {
         console.log("Chamou doSignup! " + dados);
         this.alert.create({
           title: "Pessoa cadastrado com sucesso!",
@@ -63,14 +75,8 @@ export class CadastrarPage {
         toast.present();
       });
     }
-    else {
-      this.api.getId(this.p.id).subscribe(res => {
-        console.log("Chamou api getid! " + res.nome);
+    if (this.flag2){
 
-        this.pe.nome=res.nome;
-         this.pe.email=res.email;
-         this.pe.senha=res.senha;
-         this.pe.id=res.id;
         this.api.put(this.pe).subscribe(() => {
           console.log("Chamou api put! ");
           this.alert.create({
@@ -99,21 +105,7 @@ export class CadastrarPage {
               .present();
           });
 
-      },
-        (err: HttpErrorResponse) => {
-          this.alert.create({
-            title: "Não foi encontrado o id da pessoa, Erro!",
-            subTitle: err.message,
-            buttons: [{
-              text: "Confirmar",
-              handler: () => {
-                this.navCtrl.push(MenuPage);
-              }
-            }]
-          })
-            .present();
-        });
-    }
+      }
   }
 
 }

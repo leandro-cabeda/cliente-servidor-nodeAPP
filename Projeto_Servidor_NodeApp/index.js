@@ -49,7 +49,6 @@ router.get('/api', function (req, res, next) {
 router.get('/api/banco', function (req, res, next) {
 
     let banco = getDB();
-    console.log("Valor banco: " + banco);
 
     if (banco) {
         console.log("Deu certo o banco! " + banco);
@@ -64,60 +63,104 @@ router.get('/api/banco', function (req, res, next) {
 });
 
 router.get('/api/listatodos', function (req, res, next) {
-    let dados = getAll();
-    console.log("Valor dados lista todos: " + dados);
-    console.log("get lista todos!");
+    
+    let sql = `select * from pessoas`;
+    var data = [];
 
-    if (dados != null && dados != undefined) {
-        console.log("Deu certo a busca de todos! " + dados);
-        res.status(200).json(dados);
-    }
-    else {
-        console.log("Deu errado a busca de todos! " + dados);
-        res.status(500).json("Lista está vazia");
-    }
 
+    getDB().all(sql, (err, rows) => {
+        console.log("Deu getDB.all");
+
+        if (err) {
+            console.log("Deu erro no getl all");
+
+            res.status(500).json("error");
+        }
+        if (rows.length > 0) {
+            console.log("Valor de rows.length: " + rows.length);
+
+            data = rows.filter(row => {
+                return row;
+            })
+            console.log("Valor de data.nome: " + data[0].nome);
+
+        }
+        else {
+            console.log("Entrou no else sem nada, rows vazia: " + rows.length);
+
+        }
+
+        console.log("Valor data dentro get all: " + data[0].id);
+
+        if (data != null && data != undefined) {
+            console.log("Deu certo a busca de todos! " + data[0].email);
+            res.status(200).json(data);
+        }
+        else {
+            console.log("Deu errado a busca de todos! " + data);
+            res.status(204).json("Lista está vazia");
+        }
+
+    });
 
 });
 
 router.get('/api/pegarID/:id', function (req, res, next) {
 
     let id = req.params.id;
-    let obj = getID(id);
-    console.log("get id!");
+    let sql = `select from pessoas where id=?`;
+    var data;
+     getDB().get(sql, [id], (err, row) => {
+        console.log("Deu getDB.getID");
 
-    if (obj != null && obj != undefined) {
-        console.log("Deu certo a busca do ID! " + id);
-        res.status(200).json(obj);
-    }
-    else {
-        console.log("Deu errado a busca de ID! " + id);
-        res.status(500).json("Não existe esse ID no banco de dados!");
-    }
+        if (err) {
+            console.log("Deu erro no get id");
+
+            res.status(500).json("error");
+        }
+
+        console.log("Valor do row.nome: " + row.nome);
+        data = row;
+        
+         if (data != null && data != undefined) {
+             console.log("Deu certo a busca do ID! " + id);
+             res.status(200).json(data);
+         }
+         else {
+             console.log("Deu errado a busca de ID! " + data);
+             res.status(204).json("Não existe esse ID no banco de dados!");
+         }
+
+
+    });
+
 
 });
 
 router.post('/api/cadastrar/', function (req, res, next) {
 
     let obj = req.body;
-    console.log("post cadastrar!");
+    let error=false;
 
-    console.log("Valor obj nome: " + obj.nome);
-    console.log("Valor obj email: " + obj.email);
-    console.log("Valor obj senha: " + obj.senha);
-  
-    let nome = obj.nome;
-    let email = obj.email;
-    let senha = obj.senha;
+    let sql = `insert into pessoas (nome,email,senha) values (?,?,?)`;
+    getDB().all(sql, [obj.nome, obj.email, obj.senha], (err) => {
+        console.log("Inseriu no banco");
 
-    let error = insert(nome,email,senha);
+        if (err) {
+            console.log("Erro: " + err.message);
+            error=true;
+            return err;
+        }
+
+    });
+
     if (!error) {
         console.log("Deu certo o cadastro de dados! " + obj);
         res.status(200).json(obj);
     }
     else {
         console.log("Deu errado o cadastro de dados! " + obj + "  Error: " + error);
-        res.status(500).json("Ocorreu falha no cadastro!");
+        res.status(500).json("error!");
     }
 
 });
@@ -125,9 +168,8 @@ router.post('/api/cadastrar/', function (req, res, next) {
 router.post('/api/entrar/', function (req, res, next) {
 
     let obj = req.body;
-    console.log("post entrar!");
+   
     console.log("Valor obj " + obj);
-    console.log("Entrou com dados no request! " + req.body);
 
     // Decodifica o valor de authorization, passado no header da requisição
     console.log("Valor da req Get:  " + req.headers.authorization);
@@ -163,9 +205,21 @@ router.post('/api/entrar/', function (req, res, next) {
 router.put('/api/atualizar/', function (req, res, next) {
 
     let obj = req.body;
-    console.log("put atualizar!");
     console.log("Valor obj " + obj);
-    let error = update(obj);
+
+    let sql = `update pessoas set nome=?, email=?, senha=? where id=?`;
+    let error = false;
+    getDB().run(sql, [obj.nome, obj.email, obj.senha, obj.id], (err) => {
+        console.log("Entrou no getDB update");
+
+        if (err) {
+            console.log("Erro: " + err.message);
+            error=true;
+            return err;
+        }
+
+    });
+    
     if (!error) {
         console.log("Deu certo atualizar de dados! " + obj);
         res.status(200).json("Atualizado com sucesso!");
@@ -180,8 +234,7 @@ router.put('/api/atualizar/', function (req, res, next) {
 router.delete('/api/deletar/:id', function (req, res, next) {
 
     let id = req.params.id;
-    console.log("delete id!");
-    console.log("Valor id " + id);
+    
     let error = deletar(id);
     if (!error) {
         console.log("Deu certo deletar id! " + id);
@@ -276,94 +329,10 @@ function getDB() {
 
 }
 
-function getAll() {
-    let sql = `select * from pessoas`;
-    var data = [];
-
-
-   return getDB().all(sql,[], (err, rows) => {
-        console.log("Deu getDB.all");
-
-        if (err) {
-            console.log("Deu erro no getl all");
-
-            return err;
-        }
-        if (rows.length > 0) {
-            console.log("Valor de rows.length: " + rows.length);
-
-            for(let i=0;i<rows.length;i++){
-                console.log("Valor row: "+rows[i].nome);
-                let reg={
-                    id:rows[i].id,
-                    nome: rows[i].nome,
-                    email: rows[i].email,
-                    senha: rows[i].senha,
-                };
-                console.log("Valor reg: "+reg);
-                data.push(reg);
-            
-            }
-            console.log("Valor de data.nome: "+data[0].nome);
-            
-        }
-        else {
-            console.log("Entrou no else sem nada, valor data: "+data);
-            
-        }
-
-        if (data != null && data != undefined) {
-            console.log("Valor data dentro do if get all: " + data);
-            return data;
-        }
-        else {
-            console.log("Valor data dentro do else get all: " + data);
-            return data;
-        }
-
-    });
-    
-}
-
-function insert(nome,email,senha) {
-    let sql = `insert into pessoas (nome,email,senha) values (?,?,?)`;
-    console.log("Insert Nome: " + nome);
-    console.log("Insert Email: " + email);
-    console.log("Insert Senha: " + senha);
-    getDB().run(sql, [nome,email,senha], (err) => {
-        console.log("Inseriu no banco");
-
-        if (err) {
-            console.log("Erro: " + err.message);
-            return err;
-        }
-
-    });
-
-
-}
-
-function update(obj) {
-
-    let sql = `update pessoas set nome=?, email=?, senha=? where id=?`;
-  getDB().run(sql, [obj.nome, obj.email, obj.senha, obj.id], (err) => {
-        console.log("Entrou no getDB update");
-
-        if (err) {
-            console.log("Erro: " + err.message);
-
-            return err;
-        }
-
-    });
-
-    
-}
-
 function deletar(id) {
 
     let sql = `delete from pessoas where id=?`;
-   getDB().run(sql, [id], (err) => {
+    getDB().run(sql, [id], (err) => {
         console.log("Deu getDB deletar");
 
         if (err) {
@@ -377,31 +346,7 @@ function deletar(id) {
 
 function getID(id) {
 
-    let sql = `select from pessoas where id=?`;
-    var data;
-   return getDB().get(sql, [id], (err, row) => {
-        console.log("Deu getDB.getID");
-
-        if (err) {
-            console.log("Deu erro no get id");
-
-            return data;
-        }
-
-        if (row) {
-            
-            console.log("Valor do row.nome: "+row.nome);
-            data = row;
-
-            return data;
-        }
-        else {
-            console.log("Entrou no else sem nada, valor data: "+data);
-            return data;
-        }
-
-
-    });
+   
 }
 
 /*function Auth(user, password) {

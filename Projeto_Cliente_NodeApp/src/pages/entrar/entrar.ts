@@ -1,4 +1,4 @@
-import { UserProvider } from './../../providers/user/user';
+import { ApiProvider } from './../../providers/api/api';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 import { Pessoa } from '../../models/Pessoa';
@@ -17,7 +17,7 @@ export class EntrarPage {
  public p: Pessoa;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    public user: UserProvider,
+    public api: ApiProvider,
     public toastCtrl: ToastController, private alert: AlertController) {
       this.p= new Pessoa();
   }
@@ -31,7 +31,7 @@ export class EntrarPage {
   }
 
   doLogin() {
-    this.user.login(this.p).subscribe(dados => {
+    this.api.post2(this.p).subscribe(dados => {
       console.log("Chamou doLogin! " + dados);
       this.alert.create({
         title: "Login efetuado com sucesso!",
