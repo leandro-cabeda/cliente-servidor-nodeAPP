@@ -42,7 +42,6 @@ export class CadastrarPage {
         this.flag = true;
       },
         (err: HttpErrorResponse) => {
-          let dados = this.p;
           this.alert.create({
             title: "Erro ao atualizar pessoa",
             subTitle: err.message,
@@ -50,7 +49,7 @@ export class CadastrarPage {
               text: "Confirmar",
               handler: () => {
 
-                this.navCtrl.push(MenuPage, { dados });
+                this.navCtrl.push(MenuPage);
               }
             }]
           })
@@ -63,68 +62,86 @@ export class CadastrarPage {
 
   doSignup() {
     if (this.pe.nome.trim() != "" && this.pe.email.trim() != "" && this.pe.senha.trim() != "") {
-      if (!this.flag) {
-        this.api.post(this.pe).subscribe(dados => {
 
+      this.api.getEmail(this.pe.email).subscribe(res => {
+
+        if (res != null && !this.flag) {
           this.alert.create({
-            title: "Pessoa cadastrado com sucesso!",
+            title: "Já consta este email no banco de dados!",
             buttons: [{
               text: "Confirmar",
-              handler: () => {
-                this.navCtrl.push(MenuPage, { dados });
-              }
             }]
           })
             .present();
+        }
+        else {
 
-        }, (err: HttpErrorResponse) => {
+          if (!this.flag) {
+            this.api.post(this.pe).subscribe(() => {
 
-          this.navCtrl.push(HomePage);
+              this.alert.create({
+                title: "Pessoa cadastrado com sucesso!",
+                buttons: [{
+                  text: "Confirmar",
+                  handler: () => {
+                    this.navCtrl.push(MenuPage);
+                  }
+                }]
+              })
+                .present();
 
-          let toast = this.toastCtrl.create({
-            message: "Falha ao tentar cadastrar pessoa!" + " " + err.message,
-            duration: 3000,
-            position: 'top'
+            }, (err: HttpErrorResponse) => {
 
-          });
-          toast.present();
-        });
-      }
-      if (this.flag2) {
+              this.navCtrl.push(HomePage);
 
-        this.api.put(this.pe).subscribe(() => {
+              let toast = this.toastCtrl.create({
+                message: "Falha ao tentar cadastrar pessoa!" + " " + err.message,
+                duration: 3000,
+                position: 'top'
 
-          let dados = this.pe;
-          this.alert.create({
-            title: "Cadastro de pessoa atualizado com sucesso!",
-            buttons: [{
-              text: "Confirmar",
-              handler: () => {
-                this.navCtrl.push(MenuPage, { dados });
-              }
-            }]
-          })
-            .present();
+              });
+              toast.present();
+            });
+          }
 
-        },
-          (err: HttpErrorResponse) => {
-            this.alert.create({
-              title: "Erro ao atualizar pessoa",
-              subTitle: err.message,
-              buttons: [{
-                text: "Confirmar",
-                handler: () => {
-                  this.navCtrl.push(MenuPage);
-                }
-              }]
-            })
-              .present();
-          });
+          if (this.flag2) {
 
-      }
+            this.api.put(this.pe).subscribe(() => {
+
+              this.alert.create({
+                title: "Cadastro de pessoa atualizado com sucesso!",
+                buttons: [{
+                  text: "Confirmar",
+                  handler: () => {
+                    this.navCtrl.push(MenuPage);
+                  }
+                }]
+              })
+                .present();
+
+            },
+              (err: HttpErrorResponse) => {
+                this.alert.create({
+                  title: "Erro ao atualizar pessoa",
+                  subTitle: err.message,
+                  buttons: [{
+                    text: "Confirmar",
+                    handler: () => {
+                      this.navCtrl.push(MenuPage);
+                    }
+                  }]
+                })
+                  .present();
+              });
+
+          }
+
+        }
+
+      });
+
     }
-    else
-    {
+    else {
       let toast = this.toastCtrl.create({
         message: "Por favor preencha todos os campos!",
         duration: 3000,

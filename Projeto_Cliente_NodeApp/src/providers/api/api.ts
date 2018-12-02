@@ -27,9 +27,14 @@ export class ApiProvider {
     return this.http.get<Pessoa>(this.url + '/pegarID/'+id);
   }
 
+  public getEmail(email: string) {
+
+    return this.http.get<Pessoa>(this.url + '/pegarEmail/' + email);
+  }
+
   public post(dados:Pessoa) {
 
-    return this.http.post<Pessoa>(this.url + "/cadastrar/",dados);
+    return this.http.post(this.url + "/cadastrar/",dados);
   }
 
   public post2(dados:Pessoa) {

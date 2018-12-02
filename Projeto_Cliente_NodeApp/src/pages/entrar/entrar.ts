@@ -37,11 +37,12 @@ export class EntrarPage {
         let dados = res;
 
         this.alert.create({
-          title: "Login efetuado com sucesso!",
+          title: "Bem vindo " + dados.nome,
+          subTitle: "Login efetuado com sucesso!",
           buttons: [{
             text: "Confirmar",
             handler: () => {
-              this.navCtrl.push(MenuPage, { dados });
+              this.navCtrl.push(MenuPage);
             }
           }]
         })

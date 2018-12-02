@@ -14,14 +14,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class MenuPage {
   public users: Pessoa[];
-  public user:Pessoa;
   public flag: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public api: ApiProvider,
     private alert: AlertController) {
-
-    this.user = this.navParams.get("dados");
     this.flag=false;
   }
 

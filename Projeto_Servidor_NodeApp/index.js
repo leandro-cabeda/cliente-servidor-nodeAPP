@@ -99,17 +99,17 @@ router.get('/api/listatodos', function (req, res, next) {
 router.get('/api/pegarID/:id', function (req, res, next) {
 
     let id = req.params.id;
-    
+
     let sql = `select * from pessoas where id=?`;
     var data;
-    getDB().get(sql, [id], (err,row) => {
+    getDB().get(sql, [id], (err, row) => {
 
         if (err) {
 
             res.status(500).json("error");
         }
 
-        data=row;
+        data = row;
 
         if (data != null && data != undefined) {
             console.log("Deu certo a busca do ID! " + data.id);
@@ -117,8 +117,30 @@ router.get('/api/pegarID/:id', function (req, res, next) {
         }
         else {
             console.log("Deu errado a busca de ID! " + data);
-            res.status(204).json("Não existe esse ID no banco de dados!");
+            res.status(404).json("Não existe esse ID no banco de dados!");
         }
+
+
+    });
+
+
+});
+
+router.get('/api/pegarEmail/:email', function (req, res, next) {
+
+    let email = req.params.email;
+
+    let sql = `select * from pessoas where upper(email)=?`;
+    var data;
+    getDB().get(sql, [email.toUpperCase()], (err, row) => {
+
+        if (err) {
+
+            res.status(500).json("error");
+        }
+
+        data = row;
+        res.status(200).json(data);
 
 
     });
@@ -167,7 +189,7 @@ router.post('/api/entrar/', function (req, res, next) {
 
             res.status(500).json("error");
         }
-        
+
         data = row;
 
         if (data != null && data != undefined) {
@@ -176,7 +198,7 @@ router.post('/api/entrar/', function (req, res, next) {
         }
         else {
             console.log("Não existe esse dado no banco de dados! " + data);
-            res.status(401).json("Não existe esse ID no banco de dados!");
+            res.status(400).json("Não existe esse dado no banco de dados!");
         }
 
 
@@ -261,7 +283,7 @@ function getDB() {
 
         let sql = `create table if not exists pessoas (id integer primary key autoincrement not null,
         nome text, email text, senha text)`;
-        
+
         db.run(sql, (err) => {
             if (err) {
                 console.log("Erro: " + err.message)
