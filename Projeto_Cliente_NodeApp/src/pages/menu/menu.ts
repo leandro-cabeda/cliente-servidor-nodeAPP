@@ -13,8 +13,8 @@ import { HttpErrorResponse } from '@angular/common/http';
   templateUrl: 'menu.html',
 })
 export class MenuPage {
-  public user: Pessoa;
   public users: Pessoa[];
+  public user:Pessoa;
   public flag: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
@@ -30,7 +30,7 @@ export class MenuPage {
   }
 
   ionViewDidEnter() {
-    //this.carregarDadosPessoas();
+
   }
 
   carregarDadosPessoas() {

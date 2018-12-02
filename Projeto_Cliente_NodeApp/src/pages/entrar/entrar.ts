@@ -14,12 +14,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class EntrarPage {
 
- public p: Pessoa;
+  public p: Pessoa;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public api: ApiProvider,
     public toastCtrl: ToastController, private alert: AlertController) {
-      this.p= new Pessoa();
+    this.p = new Pessoa();
   }
 
   ionViewDidLoad() {
@@ -31,28 +31,41 @@ export class EntrarPage {
   }
 
   doLogin() {
-    this.api.post2(this.p).subscribe(dados => {
-      console.log("Chamou doLogin! " + dados);
-      this.alert.create({
-        title: "Login efetuado com sucesso!",
-        buttons: [{
-          text: "Confirmar",
-          handler: () => {
-            this.navCtrl.push(MenuPage, { dados });
-          }
-        }]
-      })
-        .present();
 
-    }, (err: HttpErrorResponse) => {
-      this.navCtrl.push(HomePage);
+    if (this.p.email.trim() != "" && this.p.senha.trim() != "") {
+      this.api.post2(this.p).subscribe(res => {
+        let dados = res;
+
+        this.alert.create({
+          title: "Login efetuado com sucesso!",
+          buttons: [{
+            text: "Confirmar",
+            handler: () => {
+              this.navCtrl.push(MenuPage, { dados });
+            }
+          }]
+        })
+          .present();
+
+      }, (err: HttpErrorResponse) => {
+        this.navCtrl.push(HomePage);
+        let toast = this.toastCtrl.create({
+          message: "Falha ao tentar logar!" + " " + err.message,
+          duration: 3000,
+          position: 'top'
+        });
+        toast.present();
+      });
+    }
+    else
+    {
       let toast = this.toastCtrl.create({
-        message: "Falha ao tentar logar!"+" "+err.message,
+        message: "Por favor preencha todos os campos!",
         duration: 3000,
         position: 'top'
       });
       toast.present();
-    });
+    }
   }
 
 }

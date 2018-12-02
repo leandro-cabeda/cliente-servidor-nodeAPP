@@ -18,8 +18,9 @@
   </button>
   <br />
   <ion-list *ngFor="let p of users" text-center>
-    <ion-item *ngIf="flag" text-wrap>
-      <label>{{p.nome}}</label>&ensp;<label>{{p.email}}</label>&ensp;
+    <ion-item *ngIf="flag" text-wrap class="list">
+      <h2>ID Pessoa:&ensp;{{p.id}}<br/>Nome Pessoa:&ensp;{{p.nome}}
+      <br/>Email Pessoa:&ensp;{{p.email}}</h2>&ensp;
       <button ion-button item-end icon-left round color="secondary" (click)="editar(p)">
         <ion-icon ios="ios-create" md="md-create">&ensp;Editar</ion-icon>
       </button>&ensp;

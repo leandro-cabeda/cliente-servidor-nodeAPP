@@ -16,25 +16,14 @@ export class CadastrarPage {
   public pe: Pessoa;
   public p: Pessoa;
   public flag: any;
-  public flag2:any;
+  public flag2: any;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
     public toastCtrl: ToastController, private alert: AlertController, public api: ApiProvider) {
     this.pe = new Pessoa();
     this.flag = false;
-    console.log("Valor flag inicial: "+this.flag);
-
     this.flag2 = this.navParams.get("flag2");
-    console.log("Valor flag2 quando editar: " + this.flag2);
-
-    if(this.flag2){
-      this.p = this.navParams.get("p");
-      this.pe.id=this.p.id;
-      this.pe.nome = this.p.nome;
-      this.pe.email = this.p.email;
-      this.pe.senha = this.p.senha;
-    }
-
+    this.p = this.navParams.get("p");
 
   }
 
@@ -42,49 +31,76 @@ export class CadastrarPage {
 
   }
 
-  ionViewDidEnter()
-  {
+  ionViewDidEnter() {
+
+    if (this.flag2) {
+      this.api.getId(this.p.id).subscribe(res => {
+        this.pe.id = res.id;
+        this.pe.nome = res.nome;
+        this.pe.email = res.email;
+        this.pe.senha = res.senha;
+        this.flag = true;
+      },
+        (err: HttpErrorResponse) => {
+          let dados = this.p;
+          this.alert.create({
+            title: "Erro ao atualizar pessoa",
+            subTitle: err.message,
+            buttons: [{
+              text: "Confirmar",
+              handler: () => {
+
+                this.navCtrl.push(MenuPage, { dados });
+              }
+            }]
+          })
+            .present();
+        });
+
+    }
 
   }
 
   doSignup() {
-    if (!this.flag) {
-      this.api.post(this.pe).subscribe(dados => {
-        console.log("Chamou doSignup! " + dados);
-        this.alert.create({
-          title: "Pessoa cadastrado com sucesso!",
-          buttons: [{
-            text: "Confirmar",
-            handler: () => {
-              this.navCtrl.push(MenuPage, { dados });
-            }
-          }]
-        })
-          .present();
+    if (this.pe.nome.trim() != "" && this.pe.email.trim() != "" && this.pe.senha.trim() != "") {
+      if (!this.flag) {
+        this.api.post(this.pe).subscribe(dados => {
 
-      }, (err: HttpErrorResponse) => {
+          this.alert.create({
+            title: "Pessoa cadastrado com sucesso!",
+            buttons: [{
+              text: "Confirmar",
+              handler: () => {
+                this.navCtrl.push(MenuPage, { dados });
+              }
+            }]
+          })
+            .present();
 
-        this.navCtrl.push(HomePage);
+        }, (err: HttpErrorResponse) => {
 
-        let toast = this.toastCtrl.create({
-          message: "Falha ao tentar cadastrar pessoa!" + " " + err.message,
-          duration: 3000,
-          position: 'top'
+          this.navCtrl.push(HomePage);
 
+          let toast = this.toastCtrl.create({
+            message: "Falha ao tentar cadastrar pessoa!" + " " + err.message,
+            duration: 3000,
+            position: 'top'
+
+          });
+          toast.present();
         });
-        toast.present();
-      });
-    }
-    if (this.flag2){
+      }
+      if (this.flag2) {
 
         this.api.put(this.pe).subscribe(() => {
-          console.log("Chamou api put! ");
+
+          let dados = this.pe;
           this.alert.create({
             title: "Cadastro de pessoa atualizado com sucesso!",
             buttons: [{
               text: "Confirmar",
               handler: () => {
-                this.navCtrl.push(MenuPage);
+                this.navCtrl.push(MenuPage, { dados });
               }
             }]
           })
@@ -106,6 +122,16 @@ export class CadastrarPage {
           });
 
       }
+    }
+    else
+    {
+      let toast = this.toastCtrl.create({
+        message: "Por favor preencha todos os campos!",
+        duration: 3000,
+        position: 'top'
+      });
+      toast.present();
+    }
   }
 
 }
