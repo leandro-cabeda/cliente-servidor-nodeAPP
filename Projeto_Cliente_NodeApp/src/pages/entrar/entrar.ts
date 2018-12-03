@@ -69,4 +69,10 @@ export class EntrarPage {
     }
   }
 
+
+  VoltarInicio() {
+    this.navCtrl.push(HomePage);
+  }
+
+
 }

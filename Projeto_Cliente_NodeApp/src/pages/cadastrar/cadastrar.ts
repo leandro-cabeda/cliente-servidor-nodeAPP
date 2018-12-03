@@ -151,4 +151,13 @@ export class CadastrarPage {
     }
   }
 
+
+  VoltarInicio() {
+    this.navCtrl.push(HomePage);
+  }
+
+
+
 }
+
+
