@@ -49,7 +49,7 @@ export class CadastrarPage {
               text: "Confirmar",
               handler: () => {
 
-                this.navCtrl.push(MenuPage);
+                this.navCtrl.push(MenuPage.name);
               }
             }]
           })
@@ -84,7 +84,7 @@ export class CadastrarPage {
                 buttons: [{
                   text: "Confirmar",
                   handler: () => {
-                    this.navCtrl.push(MenuPage);
+                    this.navCtrl.push(MenuPage.name);
                   }
                 }]
               })
@@ -113,7 +113,7 @@ export class CadastrarPage {
                 buttons: [{
                   text: "Confirmar",
                   handler: () => {
-                    this.navCtrl.push(MenuPage);
+                    this.navCtrl.push(MenuPage.name);
                   }
                 }]
               })
@@ -127,7 +127,7 @@ export class CadastrarPage {
                   buttons: [{
                     text: "Confirmar",
                     handler: () => {
-                      this.navCtrl.push(MenuPage);
+                      this.navCtrl.push(MenuPage.name);
                     }
                   }]
                 })
