@@ -41,8 +41,16 @@ export class ApiProvider {
   }
 
   public post(dados:Pessoa) {
+    let header = new HttpHeaders();
+    header = header.append('Content-Type', 'application/json');
+    header = header.append('Accept', 'application/json');
+    header = header.append('Authorization', 'Bearer ' + this.getToken());
+    let auth = header;
+    let options = {
+      headers: auth
+    }
 
-    return this.http.post(this.url + "/cadastrar/", dados);
+    return this.http.post(this.url + "/cadastrar/", dados, options);
   }
 
   public post2(dados:Pessoa) {
@@ -66,7 +74,16 @@ export class ApiProvider {
 
   public delete(id:number) {
 
-    return this.http.delete(this.url + '/deletar/' + id);
+    let header = new HttpHeaders();
+    header = header.append('Content-Type', 'application/json');
+    header = header.append('Accept', 'application/json');
+    header = header.append('Authorization', 'Bearer ' + this.getToken());
+    let auth = header;
+    let options = {
+      headers: auth
+    }
+
+    return this.http.delete(this.url + '/deletar/' + id, options);
   }
 
 

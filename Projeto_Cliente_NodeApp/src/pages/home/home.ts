@@ -1,7 +1,6 @@
 import { Component} from '@angular/core';
 import { NavController} from 'ionic-angular';
 import { EntrarPage } from '../entrar/entrar';
-import { CadastrarPage } from '../cadastrar/cadastrar';
 
 @Component({
   selector: 'page-home',
@@ -16,10 +15,6 @@ export class HomePage {
 
   entrar() {
     this.navCtrl.push(EntrarPage);
-  }
-
-  cadastrar() {
-    this.navCtrl.push(CadastrarPage);
   }
 
 }

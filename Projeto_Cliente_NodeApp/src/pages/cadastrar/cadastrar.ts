@@ -166,8 +166,22 @@ export class CadastrarPage {
   }
 
 
-  VoltarInicio() {
-    this.navCtrl.push(HomePage);
+  VoltarMenu() {
+    this.navCtrl.push(MenuPage);
+  }
+
+  sair() {
+
+    this.alert.create({
+      title: "Você saiu!",
+      buttons: [{
+        text: "Confirmar",
+        handler: () => {
+          this.navCtrl.push(HomePage);
+        }
+      }]
+    })
+      .present();
   }
 
 

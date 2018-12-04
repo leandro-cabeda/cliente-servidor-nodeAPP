@@ -147,7 +147,7 @@ router.get('/api/pegarEmail/:email', function (req, res, next) {
 
 });
 
-router.post('/api/cadastrar/',function (req, res, next) {
+router.post('/api/cadastrar/', verifyToken,function (req, res, next) {
 
     let obj = req.body;
     let error = false;
@@ -238,7 +238,7 @@ router.put('/api/atualizar/', verifyToken, function (req, res, next) {
 
 });
 
-router.delete('/api/deletar/:id', function (req, res, next) {
+router.delete('/api/deletar/:id', verifyToken, function (req, res, next) {
 
     let id = req.params.id;
 
@@ -339,8 +339,9 @@ function verifyToken(req, res, next) {
             } else {
 
                 res.status(200).json("Autorizado!");
+                next();
             }
-            next();
+        
         });
 
     } else {

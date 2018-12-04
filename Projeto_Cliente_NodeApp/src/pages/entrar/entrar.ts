@@ -55,7 +55,7 @@ export class EntrarPage {
       },(err: HttpErrorResponse) => {
 
         let toast = this.toastCtrl.create({
-          message: "Falha ao tentar logar!" + " " + err.message,
+          message: "Falha ao tentar logar!" + " " + err.error,
           duration: 3000,
           position: 'top'
         });

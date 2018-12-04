@@ -40,7 +40,7 @@ export class MenuPage {
       (err: HttpErrorResponse) => {
         this.alert.create({
           title: "Erro carregar pessoas!",
-          subTitle: err.message,
+          subTitle: err.error,
           buttons: [{
             text: "Confirmar",
             handler: () => {
@@ -78,7 +78,7 @@ export class MenuPage {
       (err: HttpErrorResponse) => {
         this.alert.create({
           title: "Erro!",
-          subTitle: err.message,
+          subTitle: err.error,
           buttons: [{
             text: "Confirmar",
             handler: () => {
