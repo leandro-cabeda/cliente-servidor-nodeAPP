@@ -1,3 +1,4 @@
+import { EntrarPage } from './../entrar/entrar';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Pessoa } from '../../models/Pessoa';
@@ -79,7 +80,10 @@ export class MenuPage {
           title: "Erro!",
           subTitle: err.message,
           buttons: [{
-            text: "Confirmar"
+            text: "Confirmar",
+            handler: () => {
+              this.navCtrl.push(EntrarPage.name);
+            }
           }]
         })
           .present();

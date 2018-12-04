@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Pessoa } from '../../models/Pessoa';
 
@@ -6,12 +6,18 @@ import { Pessoa } from '../../models/Pessoa';
 export class ApiProvider {
 
   public url: string = 'http://localhost:8080/api';
+  public token:string;
 
   constructor(public http: HttpClient) {
 
   }
 
-  databaseSqlite() {
+  public Token(toke:string)
+  {
+    this.token=toke;
+  }
+
+  public databaseSqlite() {
 
     return this.http.get(this.url + '/banco');
 
@@ -24,7 +30,7 @@ export class ApiProvider {
 
   public getId(id:number) {
 
-    return this.http.get<Pessoa>(this.url + '/pegarID/'+id);
+    return this.http.get<Pessoa>(this.url + '/pegarID/' +id);
   }
 
   public getEmail(email: string) {
@@ -34,22 +40,28 @@ export class ApiProvider {
 
   public post(dados:Pessoa) {
 
-    return this.http.post(this.url + "/cadastrar/",dados);
+    return this.http.post(this.url + "/cadastrar/", dados);
   }
 
   public post2(dados:Pessoa) {
-
-    return this.http.post<Pessoa>(this.url + "/entrar/",dados);
+    let header = new HttpHeaders();
+    header.append('Authorization', 'Bearer 123');
+    let auth=header;
+    let options = {
+      headers: auth
+    }
+    return this.http.post<string>(this.url + "/entrar/", dados,options);
   }
 
   public put(dados:Pessoa) {
+    console.log("valor options put: ");
 
-    return this.http.put(this.url + '/atualizar/',dados);
+    return this.http.put(this.url + '/atualizar/', dados);
   }
 
   public delete(id:number) {
 
-    return this.http.delete(this.url + '/deletar/'+id);
+    return this.http.delete(this.url + '/deletar/' + id);
   }
 
 

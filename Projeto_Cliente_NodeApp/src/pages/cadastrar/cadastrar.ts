@@ -1,3 +1,4 @@
+import { EntrarPage } from './../entrar/entrar';
 import { ApiProvider } from './../../providers/api/api';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
@@ -34,6 +35,7 @@ export class CadastrarPage {
   ionViewDidEnter() {
 
     if (this.flag2) {
+
       this.api.getId(this.p.id).subscribe(res => {
         this.pe.id = res.id;
         this.pe.nome = res.nome;
@@ -43,7 +45,7 @@ export class CadastrarPage {
       },
         (err: HttpErrorResponse) => {
           this.alert.create({
-            title: "Erro ao atualizar pessoa",
+            title: "Erro ao resgatar ID da pessoa!",
             subTitle: err.message,
             buttons: [{
               text: "Confirmar",
@@ -92,11 +94,11 @@ export class CadastrarPage {
 
             }, (err: HttpErrorResponse) => {
 
-              this.navCtrl.push(HomePage);
+              this.navCtrl.push(EntrarPage.name);
 
               let toast = this.toastCtrl.create({
-                message: "Falha ao tentar cadastrar pessoa!" + " " + err.message,
-                duration: 3000,
+                message: "Falha!" + " " + err.message,
+                duration: 4000,
                 position: 'top'
 
               });
@@ -122,12 +124,12 @@ export class CadastrarPage {
             },
               (err: HttpErrorResponse) => {
                 this.alert.create({
-                  title: "Erro ao atualizar pessoa",
+                  title: "Erro!",
                   subTitle: err.message,
                   buttons: [{
                     text: "Confirmar",
                     handler: () => {
-                      this.navCtrl.push(MenuPage.name);
+                      this.navCtrl.push(EntrarPage.name);
                     }
                   }]
                 })
@@ -138,13 +140,25 @@ export class CadastrarPage {
 
         }
 
+      }, (err: HttpErrorResponse) => {
+        this.alert.create({
+          title: "Erro!",
+          subTitle: err.message,
+          buttons: [{
+            text: "Confirmar",
+            handler: () => {
+              this.navCtrl.push(EntrarPage.name);
+            }
+          }]
+        })
+          .present();
       });
 
     }
     else {
       let toast = this.toastCtrl.create({
         message: "Por favor preencha todos os campos!",
-        duration: 3000,
+        duration: 4000,
         position: 'top'
       });
       toast.present();

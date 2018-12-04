@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express();
 const port = process.env.PORT || 8080;
-//const secret = process.env.SECRET || "leocami";
+const secret = process.env.SECRET || "leocami";
 //const fs = require('fs');
 const bodyParser = require("body-parser");
 const cors = require('cors');
 const sqlite = require('sqlite3').verbose();
-//const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 //const redirectPath = "/api/entrar/:dados";
 //var request = require("request");
 /*const { Pool, Client } = require("pg");
@@ -120,13 +120,15 @@ router.get('/api/pegarID/:id', function (req, res, next) {
             res.status(404).json("Não existe esse ID no banco de dados!");
         }
 
+        next();
+
 
     });
 
 
 });
 
-router.get('/api/pegarEmail/:email', function (req, res, next) {
+router.get('/api/pegarEmail/:email', verifyToken, function (req, res, next) {
 
     let email = req.params.email;
 
@@ -141,6 +143,7 @@ router.get('/api/pegarEmail/:email', function (req, res, next) {
 
         data = row;
         res.status(200).json(data);
+        next();
 
 
     });
@@ -148,7 +151,7 @@ router.get('/api/pegarEmail/:email', function (req, res, next) {
 
 });
 
-router.post('/api/cadastrar/', function (req, res, next) {
+router.post('/api/cadastrar/', verifyToken,function (req, res, next) {
 
     let obj = req.body;
     let error = false;
@@ -173,11 +176,17 @@ router.post('/api/cadastrar/', function (req, res, next) {
         res.status(500).json("error!");
     }
 
+    next();
+
 });
 
 router.post('/api/entrar/', function (req, res, next) {
 
     let obj = req.body;
+
+    let auth = req.headers.authorization;
+    console.log("Valor do AUTH: " + JSON.stringify(auth));
+
 
     console.log("Valor obj " + obj);
 
@@ -194,18 +203,26 @@ router.post('/api/entrar/', function (req, res, next) {
 
         if (data != null && data != undefined) {
             console.log("Deu certo a busca dos dados! " + data.id);
-            res.status(200).json(data);
+            let token = jwt.sign({
+                login: data.email,
+                password: data.senha
+            },
+                secret,
+                {
+                    expiresIn: 60
+                });
+            res.status(200).json(token);
         }
         else {
             console.log("Não existe esse dado no banco de dados! " + data);
-            res.status(400).json("Não existe esse dado no banco de dados!");
+            res.status(401).json("Não existe esse dado no banco de dados!");
         }
 
 
     });
 });
 
-router.put('/api/atualizar/', function (req, res, next) {
+router.put('/api/atualizar/', verifyToken, function (req, res, next) {
 
     let obj = req.body;
 
@@ -230,9 +247,11 @@ router.put('/api/atualizar/', function (req, res, next) {
         res.status(500).json("Ocorreu falha ao atualizar!");
     }
 
+    next();
+
 });
 
-router.delete('/api/deletar/:id', function (req, res, next) {
+router.delete('/api/deletar/:id', verifyToken, function (req, res, next) {
 
     let id = req.params.id;
 
@@ -245,6 +264,8 @@ router.delete('/api/deletar/:id', function (req, res, next) {
         console.log("Deu errado deletar id! " + id + "  Error: " + error);
         res.status(500).json("Ocorreu falha na remoção!");
     }
+
+    next();
 
 });
 
@@ -319,4 +340,23 @@ function deletar(id) {
 
     });
 
+}
+
+function verifyToken(req, res, next) {
+    let auth = req.headers.authorization;
+    if (auth) {
+        auth = req.headers.authorization.split(' ')[1];
+        jwt.verify(auth, secret, function (err) {
+            if (err) {
+                res.status(401).json("Permissão negada!!");
+            } else {
+
+                res.status(200).json("Permissão permitida!");
+            }
+        });
+
+    } else {
+        res.status(401).json("Não autorizado!!");
+    }
+    next();
 }

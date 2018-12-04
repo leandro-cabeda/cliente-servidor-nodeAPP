@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { Component} from '@angular/core';
+import { NavController} from 'ionic-angular';
 import { EntrarPage } from '../entrar/entrar';
 import { CadastrarPage } from '../cadastrar/cadastrar';
 
@@ -10,6 +10,7 @@ import { CadastrarPage } from '../cadastrar/cadastrar';
 export class HomePage {
 
   constructor(public navCtrl: NavController) {
+
 
   }
 
