@@ -51,7 +51,7 @@ export class CadastrarPage {
               text: "Confirmar",
               handler: () => {
 
-                this.navCtrl.push(MenuPage.name);
+                this.navCtrl.push(MenuPage);
               }
             }]
           })
@@ -86,7 +86,7 @@ export class CadastrarPage {
                 buttons: [{
                   text: "Confirmar",
                   handler: () => {
-                    this.navCtrl.push(MenuPage.name);
+                    this.navCtrl.push(MenuPage);
                   }
                 }]
               })
@@ -94,10 +94,10 @@ export class CadastrarPage {
 
             }, (err: HttpErrorResponse) => {
 
-              this.navCtrl.push(EntrarPage.name);
+              this.navCtrl.push(EntrarPage);
 
               let toast = this.toastCtrl.create({
-                message: "Falha!" + " " + err.message,
+                message: err.error+"  "+err.message,
                 duration: 4000,
                 position: 'top'
 
@@ -115,7 +115,7 @@ export class CadastrarPage {
                 buttons: [{
                   text: "Confirmar",
                   handler: () => {
-                    this.navCtrl.push(MenuPage.name);
+                    this.navCtrl.push(MenuPage);
                   }
                 }]
               })
@@ -124,12 +124,12 @@ export class CadastrarPage {
             },
               (err: HttpErrorResponse) => {
                 this.alert.create({
-                  title: "Erro!",
+                  title: err.error,
                   subTitle: err.message,
                   buttons: [{
                     text: "Confirmar",
                     handler: () => {
-                      this.navCtrl.push(EntrarPage.name);
+                      this.navCtrl.push(EntrarPage);
                     }
                   }]
                 })
@@ -142,12 +142,12 @@ export class CadastrarPage {
 
       }, (err: HttpErrorResponse) => {
         this.alert.create({
-          title: "Erro!",
+          title: err.error,
           subTitle: err.message,
           buttons: [{
             text: "Confirmar",
             handler: () => {
-              this.navCtrl.push(EntrarPage.name);
+              this.navCtrl.push(EntrarPage);
             }
           }]
         })
@@ -169,7 +169,6 @@ export class CadastrarPage {
   VoltarInicio() {
     this.navCtrl.push(HomePage);
   }
-
 
 
 }

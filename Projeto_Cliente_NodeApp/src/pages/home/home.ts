@@ -15,11 +15,11 @@ export class HomePage {
   }
 
   entrar() {
-    this.navCtrl.push(EntrarPage.name);
+    this.navCtrl.push(EntrarPage);
   }
 
   cadastrar() {
-    this.navCtrl.push(CadastrarPage.name);
+    this.navCtrl.push(CadastrarPage);
   }
 
 }

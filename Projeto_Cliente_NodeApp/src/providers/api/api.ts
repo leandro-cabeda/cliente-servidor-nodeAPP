@@ -8,6 +8,7 @@ export class ApiProvider {
   public url: string = 'http://localhost:8080/api';
   public token:string;
 
+
   constructor(public http: HttpClient) {
 
   }
@@ -15,6 +16,7 @@ export class ApiProvider {
   public Token(toke:string)
   {
     this.token=toke;
+
   }
 
   public databaseSqlite() {
@@ -30,7 +32,7 @@ export class ApiProvider {
 
   public getId(id:number) {
 
-    return this.http.get<Pessoa>(this.url + '/pegarID/' +id);
+    return this.http.get<Pessoa>(this.url + '/pegarID/' + id);
   }
 
   public getEmail(email: string) {
@@ -44,24 +46,33 @@ export class ApiProvider {
   }
 
   public post2(dados:Pessoa) {
-    let header = new HttpHeaders();
-    header.append('Authorization', 'Bearer 123');
-    let auth=header;
-    let options = {
-      headers: auth
-    }
-    return this.http.post<string>(this.url + "/entrar/", dados,options);
+
+    return this.http.post<string>(this.url + "/entrar/", dados);
   }
 
   public put(dados:Pessoa) {
-    console.log("valor options put: ");
 
-    return this.http.put(this.url + '/atualizar/', dados);
+    let header = new HttpHeaders();
+    header = header.append('Content-Type', 'application/json');
+    header = header.append('Accept', 'application/json');
+    header = header.append('Authorization', 'Bearer '+this.getToken());
+    let auth = header;
+    let options = {
+      headers: auth
+    }
+
+    return this.http.put(this.url + '/atualizar/', dados, options);
   }
 
   public delete(id:number) {
 
     return this.http.delete(this.url + '/deletar/' + id);
+  }
+
+
+  public getToken()
+  {
+    return this.token;
   }
 
 

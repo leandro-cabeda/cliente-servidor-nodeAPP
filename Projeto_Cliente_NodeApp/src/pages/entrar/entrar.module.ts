@@ -8,9 +8,7 @@ import { EntrarPage } from './entrar';
   ],
   imports: [
     IonicPageModule.forChild(EntrarPage),
-  ],
-  exports: [
-    EntrarPage
   ]
+
 })
 export class EntrarPageModule {}

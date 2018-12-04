@@ -9,12 +9,18 @@ import { HomePage } from '../pages/home/home';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { ApiProvider } from '../providers/api/api';
+import { CadastrarPage } from '../pages/cadastrar/cadastrar';
+import { EntrarPage } from '../pages/entrar/entrar';
+import { MenuPage } from '../pages/menu/menu';
 
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    CadastrarPage,
+    EntrarPage,
+    MenuPage
   ],
   imports: [
     BrowserModule,
@@ -25,7 +31,10 @@ import { ApiProvider } from '../providers/api/api';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    CadastrarPage,
+    EntrarPage,
+    MenuPage
   ],
   providers: [
     StatusBar,

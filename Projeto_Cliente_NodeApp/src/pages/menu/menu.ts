@@ -54,12 +54,12 @@ export class MenuPage {
 
   novo() {
 
-    this.navCtrl.push(CadastrarPage.name);
+    this.navCtrl.push(CadastrarPage);
   }
 
   editar(p: Pessoa) {
     let flag2 = true;
-    this.navCtrl.push(CadastrarPage.name, { p, flag2 });
+    this.navCtrl.push(CadastrarPage, { p, flag2});
   }
 
   excluir(id: number) {
@@ -82,7 +82,7 @@ export class MenuPage {
           buttons: [{
             text: "Confirmar",
             handler: () => {
-              this.navCtrl.push(EntrarPage.name);
+              this.navCtrl.push(EntrarPage);
             }
           }]
         })

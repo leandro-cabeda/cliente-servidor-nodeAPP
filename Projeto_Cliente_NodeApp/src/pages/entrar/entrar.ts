@@ -46,7 +46,7 @@ export class EntrarPage {
           buttons: [{
             text: "Confirmar",
             handler: () => {
-              this.navCtrl.push(MenuPage.name);
+              this.navCtrl.push(MenuPage);
             }
           }]
         })
