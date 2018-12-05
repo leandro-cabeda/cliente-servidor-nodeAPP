@@ -176,6 +176,14 @@ router.post('/api/cadastrar/', verifyToken,function (req, res, next) {
 
 router.post('/api/entrar/', function (req, res, next) {
 
+    /*
+        Bom aqui nessa URL é que resgata o login e a senha do usuário
+        através pelo body que é  o corpo que ta vindo a requisição
+        Nisso verifica se no banco contem esses 2 dados, se tiver
+        é criado um token a partir do jwt, se não retorna um erro.
+    
+    */
+
     let obj = req.body;
 
     let sql = `select * from pessoas where upper(email)=? and upper(senha)=?`;
@@ -191,13 +199,23 @@ router.post('/api/entrar/', function (req, res, next) {
 
         if (data != null && data != undefined) {
             console.log("Deu certo a busca dos dados! " + data.id);
+
+            /*
+                Se a variável data conter dados deste registro então cria-se o token
+                e retorna o token em json pra quem fez a requisição.
+                Esse token como defnido em baixo expira em 60 segundos
+                onde quer dizer 1 minuto, depois disso terá q criar outor token
+                quando efetuar login.
+                A variavel secret está definida la emcima no inicio
+                com um valor que será a chave da assinatura desse token.
+            */
             let token = jwt.sign({
                 login: data.email,
                 password: data.senha
             },
                 secret,
                 {
-                    expiresIn: 120
+                    expiresIn: 60
                 });
             res.status(200).json(token);
         }
@@ -208,6 +226,12 @@ router.post('/api/entrar/', function (req, res, next) {
     
     });
 });
+
+/*
+    Essa função  verifyToken é uma função que verifica o se o token recebido
+    ainda é valido, e essa função está definida la nas útimas linhas do código
+    Foi inserida essa função nos métodos de atualizar, cadastrar e deletar
+*/
 
 router.put('/api/atualizar/', verifyToken, function (req, res, next) {
 
@@ -326,6 +350,26 @@ function deletar(id) {
     });
 
 }
+
+/*
+    Aqui a função verifyToken recebe o cabeçalho da requisição
+    e verifica se contém valor, se não vai pra próxima função
+    inserido next. Caso essa autenticação entrar no IF,
+    uma função do jwt própria verifica se ainda está valida
+    utilziando a variavel secret q contem a assinatura,
+    caso contém erro já mand aum status 401 de token experida e não
+    autorizado se não envia um status ok e inserido um next.
+
+    Obs: Se observa que só next tem se o status da ok, porque disso
+    é pela causa de ele executar igual a função próxima a seguir mesmo
+    com token expirado, e não é essa intensção até pq isso é errado
+    Next ele vai ir pra próxima, e outras palavras cad aurl contém
+    a função verifyToken que é executada primeiro, depois se der ok
+    no status ai vai pra requisição do corpo ou parametro
+    que url trouxe, funciona assim, por isso tem que cuidar quando
+    usa o next.
+
+*/
 
 function verifyToken(req, res, next) {
     let auth = req.headers.authorization;

@@ -34,6 +34,15 @@ export class EntrarPage {
   doLogin() {
 
     if (this.p.email.trim() != "" && this.p.senha.trim() != "") {
+
+      /*
+        Esse método api.post2 envia o email e a senha la  para api.ts
+        que enviada para api do servidor, caso deu sucesso que é o subscribe
+        a variavel token recebe a resposta e envia para outra função api.token
+        que enviado la pra api.ts
+        Essa resposta que retorna seria o token criado e retornado depois
+        de ter feito o login com email e senha
+      */
       this.api.post2(this.p).subscribe(res=> {
 
         this.token=res;
