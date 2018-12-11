@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express();
 const port = process.env.PORT || 8080;
-const secret = process.env.SECRET || "leocami";
+//const secret = process.env.SECRET || "leocami";
 //const fs = require('fs');
 const bodyParser = require("body-parser");
 const cors = require('cors');
@@ -213,9 +213,9 @@ router.post('/api/entrar/', function (req, res, next) {
                 login: data.email,
                 password: data.senha
             },
-                secret,
+                //secret,  isso se mantem publico e não é recomendado
                 {
-                    expiresIn: 60
+                    expiresIn: 30
                 });
             res.status(200).json(token);
         }
@@ -382,14 +382,15 @@ function verifyToken(req, res, next) {
                 res.status(401).json("Token expirado, por favor efetue o login novamente!!");
             } else {
 
-                res.status(200).json("Autorizado!");
-                next();
+                //res.status(200);
+                next(); // isso é correto da validação
             }
         
         });
 
     } else {
-        next();
+        res.status(401).json("Token inválido!!"); // isso é correto da validação
+        //next();
        
     }
     
