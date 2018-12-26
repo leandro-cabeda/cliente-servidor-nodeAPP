@@ -21,6 +21,7 @@ export class MenuPage {
     public api: ApiProvider,
     private alert: AlertController) {
     this.flag=false;
+
   }
 
   ionViewDidLoad() {
@@ -53,7 +54,6 @@ export class MenuPage {
   }
 
   novo() {
-
     this.navCtrl.push(CadastrarPage);
   }
 
@@ -102,6 +102,7 @@ export class MenuPage {
       }]
     })
       .present();
+
   }
 
 }

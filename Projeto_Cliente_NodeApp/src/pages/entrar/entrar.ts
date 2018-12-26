@@ -49,8 +49,15 @@ export class EntrarPage {
         this.api.Token(this.token);
         console.log("Valor token: "+this.token);
 
+        let nome=this.p.email.split("@")[0];
+        let carc=[".","-","_","1","2","3","4","5","6","7","8","9","0"];
+        for(let c of carc)
+        {
+          nome=nome.replace(c,"");
+        }
+
         this.alert.create({
-          title: "Seja Bem vindo(a) ao Sistema",
+          title: "Seja Bem vindo(a) ao Sistema "+nome.toUpperCase(),
           subTitle: "Login efetuado com sucesso!",
           buttons: [{
             text: "Confirmar",

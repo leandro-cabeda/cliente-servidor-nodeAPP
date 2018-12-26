@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express();
 const port = process.env.PORT || 8080;
-//const secret = process.env.SECRET || "leocami";
+const secret = process.env.SECRET || "leocami";
 //const fs = require('fs');
 const bodyParser = require("body-parser");
 const cors = require('cors');
@@ -191,8 +191,8 @@ router.post('/api/entrar/', function (req, res, next) {
     getDB().get(sql, [obj.email.toUpperCase(), obj.senha.toUpperCase()], (err, row) => {
 
         if (err) {
-
-            res.status(500).json("error");
+            console.log("Ocorreu erro ao verificar email e senha no banco ao entrar! ");
+            res.status(500).json("Ocorreu erro ao verificar email e senha no banco ao entrar!");
         }
 
         data = row;
@@ -213,9 +213,9 @@ router.post('/api/entrar/', function (req, res, next) {
                 login: data.email,
                 password: data.senha
             },
-                //secret,  isso se mantem publico e não é recomendado
+                secret,  //isso se mantem publico e não é recomendado
                 {
-                    expiresIn: 30
+                    expiresIn: 120
                 });
             res.status(200).json(token);
         }
@@ -377,7 +377,7 @@ function verifyToken(req, res, next) {
     if (auth) {
         auth = req.headers.authorization.split(' ')[1];
         
-        jwt.verify(auth, secret, function (err) {
+        jwt.verify(auth,secret, function (err) {
             if (err) {
                 res.status(401).json("Token expirado, por favor efetue o login novamente!!");
             } else {

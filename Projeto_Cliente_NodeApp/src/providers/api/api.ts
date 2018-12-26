@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Pessoa } from '../../models/Pessoa';
 
@@ -6,7 +6,7 @@ import { Pessoa } from '../../models/Pessoa';
 export class ApiProvider {
 
   public url: string = 'http://localhost:8080/api';
-  public token:string;
+  public token: string;
 
 
   constructor(public http: HttpClient) {
@@ -21,9 +21,8 @@ export class ApiProvider {
 
   */
 
-  public Token(toke:string)
-  {
-    this.token=toke;
+  public Token(toke: string) {
+    this.token = toke;
 
   }
 
@@ -38,7 +37,7 @@ export class ApiProvider {
     return this.http.get<Pessoa[]>(this.url + '/listatodos');
   }
 
-  public getId(id:number) {
+  public getId(id: number) {
 
     return this.http.get<Pessoa>(this.url + '/pegarID/' + id);
   }
@@ -74,7 +73,27 @@ export class ApiProvider {
 
   */
 
-  public post(dados:Pessoa) {
+  public post(dados: Pessoa) {
+
+      let header = new HttpHeaders();
+      header = header.append('Content-Type', 'application/json');
+      header = header.append('Accept', 'application/json');
+      header = header.append('Authorization', 'Bearer ' + this.getToken());
+      let auth = header;
+      let options = {
+        headers: auth
+      }
+
+    return this.http.post(this.url + "/cadastrar/", dados, options);
+  }
+
+  public post2(dados: Pessoa) {
+
+    return this.http.post<string>(this.url + "/entrar/", dados);
+  }
+
+  public put(dados: Pessoa) {
+
     let header = new HttpHeaders();
     header = header.append('Content-Type', 'application/json');
     header = header.append('Accept', 'application/json');
@@ -84,29 +103,10 @@ export class ApiProvider {
       headers: auth
     }
 
-    return this.http.post(this.url + "/cadastrar/", dados, options);
-  }
-
-  public post2(dados:Pessoa) {
-
-    return this.http.post<string>(this.url + "/entrar/", dados);
-  }
-
-  public put(dados:Pessoa) {
-
-    let header = new HttpHeaders();
-    header = header.append('Content-Type', 'application/json');
-    header = header.append('Accept', 'application/json');
-    header = header.append('Authorization', 'Bearer '+this.getToken());
-    let auth = header;
-    let options = {
-      headers: auth
-    }
-
     return this.http.put(this.url + '/atualizar/', dados, options);
   }
 
-  public delete(id:number) {
+  public delete(id: number) {
 
     let header = new HttpHeaders();
     header = header.append('Content-Type', 'application/json');
@@ -121,8 +121,7 @@ export class ApiProvider {
   }
 
 
-  public getToken()
-  {
+  public getToken() {
     return this.token;
   }
 

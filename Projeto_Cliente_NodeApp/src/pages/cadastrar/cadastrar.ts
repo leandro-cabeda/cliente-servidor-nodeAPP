@@ -79,6 +79,8 @@ export class CadastrarPage {
         else {
 
           if (!this.flag) {
+
+
             this.api.post(this.pe).subscribe(() => {
 
               this.alert.create({
@@ -97,13 +99,14 @@ export class CadastrarPage {
               this.navCtrl.push(EntrarPage);
 
               let toast = this.toastCtrl.create({
-                message: err.error+"  "+err.message,
+                message: err.error + "  " + err.message,
                 duration: 4000,
                 position: 'top'
 
               });
               toast.present();
             });
+
           }
 
           if (this.flag2) {
