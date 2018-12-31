@@ -1,4 +1,3 @@
-import { EntrarPage } from './../entrar/entrar';
 import { ApiProvider } from './../../providers/api/api';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
@@ -96,8 +95,6 @@ export class CadastrarPage {
 
             }, (err: HttpErrorResponse) => {
 
-              this.navCtrl.push(EntrarPage);
-
               let toast = this.toastCtrl.create({
                 message: err.error + "  " + err.message,
                 duration: 4000,
@@ -132,7 +129,7 @@ export class CadastrarPage {
                   buttons: [{
                     text: "Confirmar",
                     handler: () => {
-                      this.navCtrl.push(EntrarPage);
+                      this.navCtrl.push(MenuPage);
                     }
                   }]
                 })
@@ -150,7 +147,7 @@ export class CadastrarPage {
           buttons: [{
             text: "Confirmar",
             handler: () => {
-              this.navCtrl.push(EntrarPage);
+              this.navCtrl.push(MenuPage);
             }
           }]
         })

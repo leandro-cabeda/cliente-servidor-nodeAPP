@@ -47,7 +47,6 @@ export class EntrarPage {
 
         this.token=res;
         this.api.Token(this.token);
-        console.log("Valor token: "+this.token);
 
         let nome=this.p.email.split("@")[0];
         let carc=[".","-","_","1","2","3","4","5","6","7","8","9","0"];

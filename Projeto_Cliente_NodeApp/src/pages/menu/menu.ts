@@ -81,9 +81,6 @@ export class MenuPage {
           subTitle: err.error,
           buttons: [{
             text: "Confirmar",
-            handler: () => {
-              this.navCtrl.push(EntrarPage);
-            }
           }]
         })
           .present();
